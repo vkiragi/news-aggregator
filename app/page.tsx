@@ -1,27 +1,38 @@
 import Link from "next/link";
-
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/Navbar";
 
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
-      <nav className="bg-white shadow-sm">
+      <nav className="bg-background border-b border-border">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <h1 className="text-xl font-bold">News Aggregator</h1>
-          <div className="space-x-4">
-            <Link 
-              href="/sign-in" 
-              className="text-blue-600 hover:text-blue-800"
-            >
-              Sign In
-            </Link>
-            <Link 
-              href="/sign-up" 
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md"
-            >
-              Sign Up
-            </Link>
+          <div className="flex items-center space-x-4">
+            <SignedOut>
+              <Link 
+                href="/sign-in/"
+                className="text-primary hover:text-primary/80"
+              >
+                Sign In
+              </Link>
+              <Link 
+                href="/sign-up/" 
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-md"
+              >
+                Sign Up
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <Link 
+                href="/dashboard" 
+                className="text-primary hover:text-primary/80 mr-4"
+              >
+                Dashboard
+              </Link>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
           </div>
         </div>
       </nav>
@@ -39,12 +50,19 @@ export default function Home() {
                 and topic clustering powered by AI.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link href="/dashboard">
-                  <Button size="lg">Start Reading</Button>
-                </Link>
-                <Link href="/sign-up">
-                  <Button variant="outline" size="lg">Create Account</Button>
-                </Link>
+                <SignedOut>
+                  <Link href="/sign-in/">
+                    <Button size="lg">Start Reading</Button>
+                  </Link>
+                  <Link href="/sign-up/">
+                    <Button variant="outline" size="lg">Create Account</Button>
+                  </Link>
+                </SignedOut>
+                <SignedIn>
+                  <Link href="/dashboard">
+                    <Button size="lg">Go to Dashboard</Button>
+                  </Link>
+                </SignedIn>
               </div>
             </div>
           </div>

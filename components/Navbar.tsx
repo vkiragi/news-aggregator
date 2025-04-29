@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/mode-toggle";
-import { UserCircle } from "lucide-react";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const navItems = [
   { name: "Home", path: "/" },
@@ -15,8 +15,6 @@ const navItems = [
 
 export function Navbar() {
   const pathname = usePathname();
-  // Mock authentication state for demo purposes
-  const isSignedIn = true; // In a real app, this would come from your auth provider
   
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -47,23 +45,19 @@ export function Navbar() {
           </nav>
         </div>
         
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           <ModeToggle />
-          {!isSignedIn && (
-            <>
-              <Link href="/sign-in">
-                <Button variant="outline">Sign In</Button>
-              </Link>
-              <Link href="/sign-up">
-                <Button>Sign Up</Button>
-              </Link>
-            </>
-          )}
-          {isSignedIn && (
-            <Button variant="ghost" size="icon">
-              <UserCircle className="h-6 w-6" />
-            </Button>
-          )}
+          <SignedOut>
+            <Link href="/sign-in/">
+              <Button variant="outline">Sign In</Button>
+            </Link>
+            <Link href="/sign-up/">
+              <Button>Sign Up</Button>
+            </Link>
+          </SignedOut>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
         </div>
       </div>
     </header>
