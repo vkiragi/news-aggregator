@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  clerkId         String    @unique
+  email           String    @unique
+  name            String?
+  image           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  userPreferences UserPreference[]
+  savedArticles   SavedArticle[]
+}
+
+model Article {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String?
+  content         String?
+  url             String
+  urlToImage      String?
+  publishedAt     DateTime
+  source          Source?   @relation(fields: [sourceId], references: [id])
+  sourceId        String?   @db.ObjectId
+  articleCategories ArticleCategory[]
+  sentiment       Sentiment?
+  summary         String?
+  savedBy         SavedArticle[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Source {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String    @unique
+  description     String?
+  url             String?
+  category        String?
+  language        String?
+  country         String?
+  articles        Article[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Category {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String    @unique
+  articleCategories ArticleCategory[]
+  userPreferences UserPreference[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// Junction table for Article to Category (many-to-many)
+model ArticleCategory {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  article     Article  @relation(fields: [articleId], references: [id])
+  articleId   String   @db.ObjectId
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String   @db.ObjectId
+  createdAt   DateTime @default(now())
+
+  @@unique([articleId, categoryId])
+}
+
+// Junction table for User to Category (many-to-many) for preferences
+model UserPreference {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @db.ObjectId
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String   @db.ObjectId
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, categoryId])
+}
+
+model SavedArticle {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  user            User      @relation(fields: [userId], references: [id])
+  userId          String    @db.ObjectId
+  article         Article   @relation(fields: [articleId], references: [id])
+  articleId       String    @db.ObjectId
+  createdAt       DateTime  @default(now())
+
+  @@unique([userId, articleId])
+}
+
+enum Sentiment {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}
