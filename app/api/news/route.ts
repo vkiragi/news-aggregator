@@ -119,7 +119,7 @@ async function analyzeSentiment(content: string): Promise<Sentiment> {
       return 'NEUTRAL';
     }
     
-    // Analyze sentiment using the sentiment.js library
+    // Use the local sentiment analyzer instead of making API calls
     const result = sentimentAnalyzer.analyze(content);
     
     // Determine sentiment category based on the score
@@ -136,8 +136,7 @@ async function analyzeSentiment(content: string): Promise<Sentiment> {
     return sentimentCategory;
   } catch (error) {
     console.error('Error analyzing sentiment:', error);
-    // Fallback to random sentiment if analysis fails
-    return generateRandomSentiment();
+    return 'NEUTRAL'; // Default fallback
   }
 }
 
@@ -148,9 +147,8 @@ async function generateSummary(content: string): Promise<string | null> {
       return null;
     }
     
-    // Generate summary using the extractive summarization method
-    const summary = extractiveSummarize(content);
-    return summary;
+    // Generate summary directly using the extractive summarization method
+    return extractiveSummarize(content);
   } catch (error) {
     console.error('Error generating summary:', error);
     return null;

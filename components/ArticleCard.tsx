@@ -2,12 +2,10 @@
 
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
-import { Bookmark, BookmarkCheck, MessageSquare } from "lucide-react";
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { ArticleSaveButton } from "@/components/ArticleSaveButton";
 
 interface ArticleCardProps {
   article: {
@@ -18,104 +16,96 @@ interface ArticleCardProps {
     urlToImage?: string;
     publishedAt: string;
     source: {
+      id: string | null;
       name: string;
     };
     sentiment?: "POSITIVE" | "NEUTRAL" | "NEGATIVE";
     summary?: string;
     isSaved?: boolean;
   };
-  onSave?: (id: string) => void;
+  onSave?: (articleId: string) => void;
 }
 
 export function ArticleCard({ article, onSave }: ArticleCardProps) {
-  const [isSaved, setIsSaved] = useState(article.isSaved || false);
-  
-  const handleSave = () => {
-    setIsSaved(!isSaved);
-    onSave?.(article.id);
-  };
-  
-  // Determine sentiment color
-  const getSentimentColor = () => {
-    switch (article.sentiment) {
+  // Get sentiment color
+  const getSentimentColor = (sentiment?: string) => {
+    switch (sentiment) {
       case "POSITIVE":
-        return "bg-green-500/10 text-green-500 hover:bg-green-500/20";
+        return "bg-green-100 text-green-800 hover:bg-green-200";
       case "NEGATIVE":
-        return "bg-red-500/10 text-red-500 hover:bg-red-500/20";
+        return "bg-red-100 text-red-800 hover:bg-red-200";
+      case "NEUTRAL":
       default:
-        return "bg-blue-500/10 text-blue-500 hover:bg-blue-500/20";
+        return "bg-gray-100 text-gray-800 hover:bg-gray-200";
     }
   };
   
+  const formattedDate = formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true });
+  
   return (
-    <Card className="overflow-hidden h-full flex flex-col">
+    <Card className="overflow-hidden transition-all hover:shadow-md h-full flex flex-col">
       {article.urlToImage && (
-        <div 
-          className="h-48 bg-muted bg-cover bg-center" 
-          style={{ backgroundImage: `url(${article.urlToImage})` }}
-        />
+        <div className="relative w-full h-48 overflow-hidden">
+          <Link href={`/dashboard/article/${encodeURIComponent(article.id)}`}>
+            <img 
+              src={article.urlToImage} 
+              alt={article.title} 
+              className="w-full h-full object-cover transition-transform hover:scale-105"
+            />
+          </Link>
+        </div>
       )}
-      {!article.urlToImage && <div className="h-48 bg-muted" />}
       
-      <CardHeader className="flex-1">
-        <div className="flex justify-between items-start">
-          <CardTitle className="line-clamp-2">
+      <CardContent className="p-4 flex-1 flex flex-col">
+        <div className="flex justify-between items-start gap-2 mb-2">
+          <Link 
+            href={`/dashboard/article/${encodeURIComponent(article.id)}`}
+            className="text-lg font-semibold hover:underline line-clamp-2"
+          >
             {article.title}
-          </CardTitle>
-          <Button variant="ghost" size="icon" onClick={handleSave}>
-            {isSaved ? (
-              <BookmarkCheck className="h-4 w-4 text-primary" />
-            ) : (
-              <Bookmark className="h-4 w-4" />
-            )}
-          </Button>
+          </Link>
+          
+          <ArticleSaveButton 
+            articleId={article.id} 
+            articleUrl={article.url}
+            initialSaved={article.isSaved} 
+          />
         </div>
         
-        <CardDescription className="line-clamp-3 mt-2">
+        <p className="text-muted-foreground text-sm line-clamp-3 mb-3 flex-1">
           {article.description}
-        </CardDescription>
-      </CardHeader>
-      
-      <CardContent className="pb-2">
-        <div className="flex flex-wrap gap-2">
-          {article.sentiment && (
-            <Badge variant="outline" className={getSentimentColor()}>
-              {article.sentiment}
-            </Badge>
-          )}
-          <Badge variant="outline" className="bg-secondary/50">
-            {article.source.name}
-          </Badge>
-        </div>
-      </CardContent>
-      
-      <CardFooter className="border-t pt-4">
-        <div className="flex justify-between items-center w-full">
-          <div className="text-sm text-muted-foreground">
-            {formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true })}
+        </p>
+        
+        <div className="mt-auto">
+          <div className="flex justify-between items-center w-full">
+            <div className="text-sm text-muted-foreground">
+              {formattedDate}
+            </div>
+            
+            <HoverCard>
+              <HoverCardTrigger>
+                <Badge className={`${getSentimentColor(article.sentiment)} cursor-help`}>
+                  {article.sentiment?.toLowerCase() || "neutral"}
+                </Badge>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80">
+                {article.summary ? (
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-semibold">Summary</h4>
+                    <p className="text-sm">{article.summary}</p>
+                  </div>
+                ) : (
+                  <p className="text-sm">No summary available</p>
+                )}
+              </HoverCardContent>
+            </HoverCard>
           </div>
           
-          <div className="flex items-center gap-2">
-            {article.summary && (
-              <HoverCard>
-                <HoverCardTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <MessageSquare className="h-4 w-4" />
-                  </Button>
-                </HoverCardTrigger>
-                <HoverCardContent className="w-80">
-                  <div className="font-semibold mb-1">AI Summary</div>
-                  <p className="text-sm">{article.summary}</p>
-                </HoverCardContent>
-              </HoverCard>
-            )}
-            
-            <Link href={article.url} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="sm">Read More</Button>
-            </Link>
+          <div className="text-xs text-muted-foreground mt-2">
+            Source: {article.source.name}
           </div>
         </div>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 } 

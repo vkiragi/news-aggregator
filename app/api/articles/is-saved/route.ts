@@ -1,55 +1,55 @@
-import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
 
-export async function GET(req: NextRequest) {
+export async function GET(request: Request) {
   try {
-    const user = await currentUser();
+    const { searchParams } = new URL(request.url);
+    const url = searchParams.get("url");
     
-    if (!user || !user.id) {
+    if (!url) {
       return NextResponse.json(
-        { error: "You must be signed in" },
-        { status: 401 }
-      );
-    }
-
-    const articleId = req.nextUrl.searchParams.get("articleId");
-
-    if (!articleId) {
-      return NextResponse.json(
-        { error: "Article ID is required" },
+        { error: "Article URL is required" },
         { status: 400 }
       );
     }
-
-    // Find user in our database
-    const dbUser = await db.user.findUnique({
-      where: { clerkId: user.id }
-    });
-
-    if (!dbUser) {
+    
+    // Get the current user
+    const user = await currentUser();
+    
+    if (!user) {
       return NextResponse.json(
-        { isSaved: false },
-        { status: 200 }
+        { isSaved: false }
       );
     }
-
-    // Check if article is saved
+    
+    // Find the article by URL
+    const article = await db.article.findFirst({
+      where: { url }
+    });
+    
+    if (!article) {
+      return NextResponse.json(
+        { isSaved: false }
+      );
+    }
+    
+    // Check if the user has saved this article
     const savedArticle = await db.savedArticle.findFirst({
       where: {
-        userId: dbUser.id,
-        articleId
+        userId: user.id,
+        articleId: article.id
       }
     });
-
-    return NextResponse.json(
-      { isSaved: !!savedArticle },
-      { status: 200 }
-    );
+    
+    return NextResponse.json({ 
+      isSaved: !!savedArticle 
+    });
+    
   } catch (error) {
     console.error("Error checking saved status:", error);
     return NextResponse.json(
-      { error: "An unexpected error occurred" },
+      { error: "Failed to check saved status" },
       { status: 500 }
     );
   }
