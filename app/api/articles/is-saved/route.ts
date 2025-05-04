@@ -24,32 +24,48 @@ export async function GET(request: Request) {
     }
     
     // Find the article by URL
-    const article = await db.article.findFirst({
-      where: { url }
-    });
+    let article;
+    try {
+      article = await db.article.findFirst({
+        where: { url }
+      });
+    } catch (dbError) {
+      console.error("Database error while finding article:", dbError);
+      return NextResponse.json(
+        { isSaved: false, debug: "Error querying for article" }
+      );
+    }
     
     if (!article) {
+      console.log(`Article not found in database: ${url}`);
       return NextResponse.json(
-        { isSaved: false }
+        { isSaved: false, debug: "Article not in database" }
       );
     }
     
     // Check if the user has saved this article
-    const savedArticle = await db.savedArticle.findFirst({
-      where: {
-        userId: user.id,
-        articleId: article.id
-      }
-    });
-    
-    return NextResponse.json({ 
-      isSaved: !!savedArticle 
-    });
+    try {
+      const savedArticle = await db.savedArticle.findFirst({
+        where: {
+          userId: user.id,
+          articleId: article.id
+        }
+      });
+      
+      return NextResponse.json({ 
+        isSaved: !!savedArticle 
+      });
+    } catch (dbError) {
+      console.error("Database error while finding saved article:", dbError);
+      return NextResponse.json(
+        { isSaved: false, debug: "Error querying for saved article" }
+      );
+    }
     
   } catch (error) {
     console.error("Error checking saved status:", error);
     return NextResponse.json(
-      { error: "Failed to check saved status" },
+      { error: "Failed to check saved status", debug: String(error) },
       { status: 500 }
     );
   }

@@ -1,91 +1,116 @@
-import { currentUser } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { NextRequest, NextResponse } from 'next/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
+import { db } from '@/lib/db';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    // Get the current user
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const user = await currentUser();
-    
     if (!user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'User not found' }, { status: 401 });
     }
-    
-    const userId = user.id;
-    
-    // Parse the request body
+
+    // Get request body
     const body = await request.json();
-    const { articleUrl, action } = body;
-    
-    if (!articleUrl) {
-      return NextResponse.json(
-        { error: "Article URL is required" },
-        { status: 400 }
-      );
+    const { articleId, articleUrl, action } = body;
+
+    if (!articleId && !articleUrl) {
+      return NextResponse.json({ error: 'Article ID or URL is required' }, { status: 400 });
     }
-    
-    // Find the article by URL
-    const article = await db.article.findFirst({
-      where: { url: articleUrl }
-    });
-    
-    if (!article) {
-      return NextResponse.json(
-        { error: "Article not found" },
-        { status: 404 }
-      );
+
+    if (!action || (action !== 'save' && action !== 'unsave')) {
+      return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
-    
-    // Find if the user has already saved this article
-    const savedArticle = await db.savedArticle.findFirst({
+
+    // Find or create user in database
+    let dbUser = await db.user.findUnique({
       where: {
-        userId,
-        articleId: article.id
+        clerkId: userId
       }
     });
-    
-    if (action === "save" && !savedArticle) {
-      // Save the article
-      await db.savedArticle.create({
+
+    // If user doesn't exist in our DB yet, create them
+    if (!dbUser) {
+      dbUser = await db.user.create({
         data: {
-          userId,
+          clerkId: userId,
+          email: user.emailAddresses[0]?.emailAddress || '',
+          name: `${user.firstName} ${user.lastName}`.trim() || user.username || ''
+        }
+      });
+    }
+
+    // Find article by ID or URL
+    let article = null;
+    if (articleId) {
+      article = await db.article.findUnique({
+        where: {
+          id: articleId
+        }
+      });
+    }
+
+    // If article was not found by ID, look it up by URL
+    if (!article && articleUrl) {
+      article = await db.article.findFirst({
+        where: {
+          url: articleUrl
+        }
+      });
+    }
+
+    // If article doesn't exist in our DB, we can't save it
+    if (!article) {
+      return NextResponse.json({ error: 'Article not found' }, { status: 404 });
+    }
+
+    if (action === 'save') {
+      // Check if already saved
+      const existingSave = await db.savedArticle.findFirst({
+        where: {
+          userId: dbUser.id,
           articleId: article.id
         }
       });
-      
-      return NextResponse.json({ 
-        success: true, 
-        message: "Article saved successfully" 
-      });
-    } else if (action === "unsave" && savedArticle) {
-      // Remove the saved article
-      await db.savedArticle.delete({
-        where: {
-          id: savedArticle.id
+
+      if (existingSave) {
+        return NextResponse.json({ message: 'Article already saved' }, { status: 200 });
+      }
+
+      // Save article
+      await db.savedArticle.create({
+        data: {
+          userId: dbUser.id,
+          articleId: article.id
         }
       });
-      
-      return NextResponse.json({ 
-        success: true, 
-        message: "Article removed from saved items" 
+
+      return NextResponse.json({ success: true, message: 'Article saved successfully' });
+    } else {
+      // Unsave article
+      const savedArticle = await db.savedArticle.findFirst({
+        where: {
+          userId: dbUser.id,
+          articleId: article.id
+        }
       });
+
+      if (savedArticle) {
+        await db.savedArticle.delete({
+          where: {
+            id: savedArticle.id
+          }
+        });
+      }
+
+      return NextResponse.json({ success: true, message: 'Article removed from saved' });
     }
-    
-    // If we get here, there was no change
-    return NextResponse.json({ 
-      success: true, 
-      message: "No change needed",
-      isSaved: !!savedArticle
-    });
-    
   } catch (error) {
-    console.error("Error saving article:", error);
-    return NextResponse.json(
-      { error: "Failed to process request" },
-      { status: 500 }
-    );
+    console.error('Error in save article API:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 } 

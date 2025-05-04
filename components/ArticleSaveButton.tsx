@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Bookmark, BookmarkCheck } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { useAuth } from "@clerk/nextjs";
-import axios from "axios";
+import { Bookmark, CheckCircle2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ArticleSaveButtonProps {
   articleId: string;
@@ -15,83 +14,56 @@ interface ArticleSaveButtonProps {
 
 export function ArticleSaveButton({ 
   articleId, 
-  articleUrl, 
+  articleUrl,
   initialSaved = false 
 }: ArticleSaveButtonProps) {
+  const router = useRouter();
   const [isSaved, setIsSaved] = useState(initialSaved);
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
-  const { userId, isSignedIn } = useAuth();
 
-  // Check if article is saved when component mounts
-  useEffect(() => {
-    const checkSavedStatus = async () => {
-      if (!isSignedIn || !userId) return;
-      
-      try {
-        const response = await axios.get(`/api/articles/is-saved?url=${encodeURIComponent(articleUrl)}`);
-        if (response.data && response.data.isSaved !== undefined) {
-          setIsSaved(response.data.isSaved);
-        }
-      } catch (error) {
-        console.error("Error checking saved status:", error);
-      }
-    };
-    
-    checkSavedStatus();
-  }, [articleUrl, isSignedIn, userId]);
-
-  const handleSave = async () => {
-    if (!isSignedIn) {
-      toast({
-        title: "Authentication required",
-        description: "Please sign in to save articles",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    setIsLoading(true);
-    
+  const handleSaveToggle = async () => {
     try {
-      const response = await axios.post("/api/articles/save", {
-        articleId,
-        articleUrl,
-        action: isSaved ? "unsave" : "save"
-      });
+      setIsLoading(true);
       
-      if (response.data && response.data.success) {
-        setIsSaved(!isSaved);
-        toast({
-          title: isSaved ? "Article removed" : "Article saved",
-          description: isSaved ? "Article removed from your saved items" : "Article added to your saved items",
-          variant: "default"
-        });
+      const response = await fetch("/api/articles/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          articleId,
+          articleUrl,
+          action: isSaved ? "unsave" : "save"
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to save article");
       }
+
+      setIsSaved(!isSaved);
+      toast.success(isSaved ? "Article removed from saved items" : "Article saved successfully");
+      
+      // Refresh the current page to update the UI
+      router.refresh();
     } catch (error) {
       console.error("Error saving article:", error);
-      toast({
-        title: "Error",
-        description: "Could not save article. Please try again.",
-        variant: "destructive"
-      });
+      toast.error("Failed to save article. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Button 
-      variant="ghost" 
-      size="icon" 
-      onClick={handleSave}
+    <Button
+      variant="outline"
+      size="icon"
       disabled={isLoading}
+      onClick={handleSaveToggle}
       aria-label={isSaved ? "Unsave article" : "Save article"}
-      title={isSaved ? "Remove from saved" : "Save for later"}
-      className="transition-all hover:scale-110"
     >
       {isSaved ? (
-        <BookmarkCheck className="h-5 w-5 text-primary" />
+        <CheckCircle2 className="h-5 w-5 text-green-500" />
       ) : (
         <Bookmark className="h-5 w-5" />
       )}

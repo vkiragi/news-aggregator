@@ -42,11 +42,18 @@ export function ArticleCard({ article, onSave }: ArticleCardProps) {
   
   const formattedDate = formatDistanceToNow(new Date(article.publishedAt), { addSuffix: true });
   
+  // Create a safe URL for the article detail page
+  // Use the MongoDB ObjectID when possible, or properly encode the URL for external articles
+  const isMongoId = /^[0-9a-fA-F]{24}$/.test(article.id); // MongoDB ObjectIDs are 24 hex characters
+  const articleDetailPath = isMongoId 
+    ? `/dashboard/article/${article.id}` 
+    : `/dashboard/article/${encodeURIComponent(article.url)}`;
+  
   return (
     <Card className="overflow-hidden transition-all hover:shadow-md h-full flex flex-col">
       {article.urlToImage && (
         <div className="relative w-full h-48 overflow-hidden">
-          <Link href={`/dashboard/article/${encodeURIComponent(article.id)}`}>
+          <Link href={articleDetailPath} prefetch={true}>
             <img 
               src={article.urlToImage} 
               alt={article.title} 
@@ -59,8 +66,9 @@ export function ArticleCard({ article, onSave }: ArticleCardProps) {
       <CardContent className="p-4 flex-1 flex flex-col">
         <div className="flex justify-between items-start gap-2 mb-2">
           <Link 
-            href={`/dashboard/article/${encodeURIComponent(article.id)}`}
+            href={articleDetailPath}
             className="text-lg font-semibold hover:underline line-clamp-2"
+            prefetch={true}
           >
             {article.title}
           </Link>
