@@ -49,6 +49,10 @@ export function ArticleCard({ article, onSave }: ArticleCardProps) {
     ? `/dashboard/article/${article.id}` 
     : `/dashboard/article/${encodeURIComponent(article.url)}`;
   
+  console.log("🔗 ArticleCard: Article ID:", article.id);
+  console.log("🔗 ArticleCard: Is MongoDB ID?", isMongoId);
+  console.log("🔗 ArticleCard: Generated path:", articleDetailPath);
+  
   return (
     <Card className="overflow-hidden transition-all hover:shadow-md h-full flex flex-col">
       {article.urlToImage && (
