@@ -9,10 +9,9 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { ArticleSaveButton } from "@/components/ArticleSaveButton";
 
-interface ArticlePageProps {
-  params: {
-    id: string;
-  };
+type ArticlePageProps = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 // List of domains that are known to be problematic
@@ -25,9 +24,7 @@ const PROBLEMATIC_DOMAINS = [
 ];
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
-  // Ensure params is properly awaited
-  const resolvedParams = await Promise.resolve(params);
-  console.log("🔍 ArticlePage: Starting with params.id:", resolvedParams.id);
+  console.log("🔍 ArticlePage: Starting with params.id:", params.id);
   
   try {
     const user = await currentUser();
@@ -61,7 +58,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     }
     
     // Safely decode the ID
-    const decodedId = decodeURIComponent(resolvedParams.id);
+    const decodedId = decodeURIComponent(params.id);
     console.log("🔍 ArticlePage: Decoded ID:", decodedId);
     
     // Check if the URL is from a problematic domain
