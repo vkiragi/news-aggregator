@@ -23,9 +23,9 @@ export default async function DashboardPage() {
     { title: "Saved Articles", value: savedCount, icon: Bookmark },
   ];
 
-  // Fetch recent articles
-  const recentArticles = await db.article.findMany({
-    take: 6,
+  // Fetch recent articles with deduplication by URL
+  const allRecentArticles = await db.article.findMany({
+    take: 20, // Fetch more to account for duplicates
     orderBy: {
       publishedAt: 'desc'
     },
@@ -33,6 +33,24 @@ export default async function DashboardPage() {
       source: true
     }
   });
+
+  // Deduplicate articles by URL and title
+  const seenUrls = new Set<string>();
+  const seenTitles = new Set<string>();
+  const recentArticles = allRecentArticles.filter(article => {
+    const normalizedUrl = article.url.toLowerCase().trim();
+    const normalizedTitle = article.title.toLowerCase().trim();
+    
+    if (seenUrls.has(normalizedUrl) || seenUrls.has(article.url) || 
+        seenTitles.has(normalizedTitle)) {
+      return false;
+    }
+    
+    seenUrls.add(normalizedUrl);
+    seenUrls.add(article.url);
+    seenTitles.add(normalizedTitle);
+    return true;
+  }).slice(0, 6); // Take only 6 after deduplication
 
   return (
     <div className="space-y-8 mx-auto w-full">

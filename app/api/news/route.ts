@@ -210,23 +210,19 @@ async function saveArticlesToDB(articles: NewsArticle[], categoryName: string) {
         continue;
       }
 
-      // Find or create the source
-      let source = await db.source.findUnique({
-        where: { name: article.source.name }
+      // Find or create the source using upsert to handle race conditions
+      const source = await db.source.upsert({
+        where: { name: article.source.name },
+        update: {}, // Don't update if it exists
+        create: {
+          name: article.source.name,
+          description: null,
+          url: null,
+          category: categoryName,
+          language: 'en',
+          country: 'us'
+        }
       });
-
-      if (!source) {
-        source = await db.source.create({
-          data: {
-            name: article.source.name,
-            description: null,
-            url: null,
-            category: categoryName,
-            language: 'en',
-            country: 'us'
-          }
-        });
-      }
 
       // Check if article already exists by URL (more robust matching)
       const normalizedUrl = article.url.toLowerCase().trim();
@@ -235,7 +231,12 @@ async function saveArticlesToDB(articles: NewsArticle[], categoryName: string) {
           OR: [
             { url: article.url },
             { url: normalizedUrl },
-            { title: article.title } // Also check for duplicate titles as backup
+            { 
+              AND: [
+                { title: article.title },
+                { sourceId: source.id }
+              ]
+            } // Check for duplicate titles from same source
           ]
         }
       });
