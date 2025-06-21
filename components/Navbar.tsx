@@ -8,9 +8,6 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const navItems = [
   { name: "Home", path: "/" },
-  { name: "Dashboard", path: "/dashboard" },
-  { name: "For You", path: "/dashboard/for-you" },
-  { name: "Saved", path: "/dashboard/saved" },
 ];
 
 export function Navbar() {
@@ -45,15 +42,15 @@ export function Navbar() {
           </nav>
         </div>
         
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-4">
           <ModeToggle />
           <SignedOut>
-            <Link href="/sign-in/">
-              <Button variant="outline">Sign In</Button>
-            </Link>
-            <Link href="/sign-up/">
-              <Button>Sign Up</Button>
-            </Link>
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/sign-in/">Sign In</Link>
+            </Button>
+            <Button asChild size="sm">
+              <Link href="/sign-up/">Sign Up</Link>
+            </Button>
           </SignedOut>
           <SignedIn>
             <UserButton afterSignOutUrl="/" />
