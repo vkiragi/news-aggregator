@@ -31,6 +31,18 @@ export default function ForYouPage() {
   const [hasMore, setHasMore] = useState(true);
   const { isSignedIn, user } = useUser();
   
+  // Helper function to create a consistent hash from URL for unique IDs
+  const createArticleId = (url: string, index: number): string => {
+    if (!url) return `article-${index}`;
+    return btoa(url).replace(/[^a-zA-Z0-9]/g, '').substring(0, 24);
+  };
+  
+  // Helper function to remove duplicate articles
+  const deduplicateArticles = (newArticles: NewsArticle[], existingArticles: NewsArticle[]): NewsArticle[] => {
+    const existingUrls = new Set(existingArticles.map(article => article.url));
+    return newArticles.filter(article => !existingUrls.has(article.url));
+  };
+  
   const fetchNews = async (pageNum = 1) => {
     try {
       setIsLoading(true);
@@ -39,17 +51,16 @@ export default function ForYouPage() {
       
       if (response.data && response.data.articles) {
         const newsArticles = response.data.articles.map((article: any, index: number) => ({
-          id: article.url || `article-${index}-${Date.now()}`, // Use URL as ID or generate one
+          id: createArticleId(article.url, index),
           title: article.title || "No title available",
-          description: article.description || "No description available", // Ensure description is never null
+          description: article.description || "No description available",
           url: article.url,
-          urlToImage: article.urlToImage || undefined, // Convert null to undefined for optional prop
+          urlToImage: article.urlToImage || undefined,
           publishedAt: article.publishedAt,
           source: {
             id: article.source?.id || null,
             name: article.source?.name || "Unknown Source"
           },
-          // Add mock sentiment and summary until we implement AI processing
           sentiment: getRandomSentiment(),
           summary: `This is a summary of the article about ${article.title.split(' ').slice(0, 5).join(' ')}...`,
           isSaved: false
@@ -58,7 +69,8 @@ export default function ForYouPage() {
         if (pageNum === 1) {
           setArticles(newsArticles);
         } else {
-          setArticles(prev => [...prev, ...newsArticles]);
+          const uniqueNewArticles = deduplicateArticles(newsArticles, articles);
+          setArticles(prev => [...prev, ...uniqueNewArticles]);
         }
         
         setHasMore(newsArticles.length > 0);
@@ -87,18 +99,8 @@ export default function ForYouPage() {
   };
   
   const handleSaveArticle = (articleId: string) => {
-    // In a real app, this would call an API to save the article to the user's account
     console.log(`Article ${articleId} saved`);
   };
-  
-  if (!isSignedIn) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh]">
-        <h2 className="text-2xl font-bold mb-2">Sign In Required</h2>
-        <p className="text-muted-foreground mb-4">Please sign in to view your personalized feed.</p>
-      </div>
-    );
-  }
   
   return (
     <div className="space-y-8">

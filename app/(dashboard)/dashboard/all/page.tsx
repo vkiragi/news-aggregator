@@ -29,6 +29,19 @@ export default function AllNewsPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   
+  // Helper function to create a consistent hash from URL for unique IDs
+  const createArticleId = (url: string, index: number): string => {
+    if (!url) return `article-${index}`;
+    // Use URL as ID, but create a simple hash for consistency
+    return btoa(url).replace(/[^a-zA-Z0-9]/g, '').substring(0, 24);
+  };
+  
+  // Helper function to remove duplicate articles
+  const deduplicateArticles = (newArticles: NewsArticle[], existingArticles: NewsArticle[]): NewsArticle[] => {
+    const existingUrls = new Set(existingArticles.map(article => article.url));
+    return newArticles.filter(article => !existingUrls.has(article.url));
+  };
+  
   const fetchNews = async (pageNum = 1) => {
     try {
       setIsLoading(true);
@@ -37,17 +50,16 @@ export default function AllNewsPage() {
       
       if (response.data && response.data.articles) {
         const newsArticles = response.data.articles.map((article: any, index: number) => ({
-          id: article.url || `article-${index}-${Date.now()}`, // Use URL as ID or generate one
+          id: createArticleId(article.url, index), // Use consistent ID generation
           title: article.title || "No title available",
-          description: article.description || "No description available", // Ensure description is never null
+          description: article.description || "No description available",
           url: article.url,
-          urlToImage: article.urlToImage || undefined, // Convert null to undefined for optional prop
+          urlToImage: article.urlToImage || undefined,
           publishedAt: article.publishedAt,
           source: {
             id: article.source?.id || null,
             name: article.source?.name || "Unknown Source"
           },
-          // Add mock sentiment and summary until we implement AI processing
           sentiment: getRandomSentiment(),
           summary: `This is a summary of the article about ${article.title.split(' ').slice(0, 5).join(' ')}...`,
           isSaved: false
@@ -56,7 +68,9 @@ export default function AllNewsPage() {
         if (pageNum === 1) {
           setArticles(newsArticles);
         } else {
-          setArticles(prev => [...prev, ...newsArticles]);
+          // Deduplicate before adding to existing articles
+          const uniqueNewArticles = deduplicateArticles(newsArticles, articles);
+          setArticles(prev => [...prev, ...uniqueNewArticles]);
         }
         
         setHasMore(newsArticles.length > 0);
@@ -85,7 +99,6 @@ export default function AllNewsPage() {
   };
   
   const handleSaveArticle = (articleId: string) => {
-    // In a real app, this would call an API to save the article to the user's account
     console.log(`Article ${articleId} saved`);
   };
   

@@ -204,6 +204,12 @@ async function saveArticlesToDB(articles: NewsArticle[], categoryName: string) {
 
     // Process each article
     for (const article of articles) {
+      // Skip articles without proper URLs
+      if (!article.url || !article.title) {
+        console.log('Skipping article without URL or title');
+        continue;
+      }
+
       // Find or create the source
       let source = await db.source.findUnique({
         where: { name: article.source.name }
@@ -222,9 +228,16 @@ async function saveArticlesToDB(articles: NewsArticle[], categoryName: string) {
         });
       }
 
-      // Check if article already exists by URL
+      // Check if article already exists by URL (more robust matching)
+      const normalizedUrl = article.url.toLowerCase().trim();
       const existingArticle = await db.article.findFirst({
-        where: { url: article.url }
+        where: { 
+          OR: [
+            { url: article.url },
+            { url: normalizedUrl },
+            { title: article.title } // Also check for duplicate titles as backup
+          ]
+        }
       });
 
       if (!existingArticle) {
@@ -259,6 +272,10 @@ async function saveArticlesToDB(articles: NewsArticle[], categoryName: string) {
             categoryId: category.id,
           }
         });
+        
+        console.log(`✅ Saved new article: ${article.title.substring(0, 50)}...`);
+      } else {
+        console.log(`⏭️ Article already exists: ${article.title.substring(0, 50)}...`);
       }
     }
 

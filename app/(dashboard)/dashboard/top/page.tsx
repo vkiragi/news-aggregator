@@ -27,6 +27,12 @@ export default function TopStoriesPage() {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
+  // Helper function to create a consistent hash from URL for unique IDs
+  const createArticleId = (url: string, index: number): string => {
+    if (!url) return `article-${index}`;
+    return btoa(url).replace(/[^a-zA-Z0-9]/g, '').substring(0, 24);
+  };
+  
   const fetchTopNews = async () => {
     try {
       setIsLoading(true);
@@ -36,7 +42,7 @@ export default function TopStoriesPage() {
       if (response.data && response.data.articles) {
         // Take only the first 6 stories for "top stories"
         const topArticles = response.data.articles.slice(0, 6).map((article: any, index: number) => ({
-          id: article.url || `article-${index}-${Date.now()}`,
+          id: createArticleId(article.url, index),
           title: article.title || "No title available",
           description: article.description || "No description available",
           url: article.url,
