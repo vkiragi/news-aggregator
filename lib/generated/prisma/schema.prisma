@@ -23,7 +23,26 @@ model User {
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   userPreferences UserPreference[]
+  userKeywords    UserKeyword[]
   savedArticles   SavedArticle[]
+
+  // Enhanced preferences
+  preferredSports        String[] @default([]) // e.g., ["formula1", "tennis", "soccer", "basketball"]
+  preferredPolitics      String[] @default([]) // e.g., ["us-politics", "international", "elections"]
+  preferredTech          String[] @default([]) // e.g., ["ai", "startups", "gaming", "cybersecurity"]
+  preferredBusiness      String[] @default([]) // e.g., ["stocks", "crypto", "real-estate", "startups"]
+  preferredEntertainment String[] @default([]) // e.g., ["movies", "music", "tv", "gaming"]
+  preferredScience       String[] @default([]) // e.g., ["space", "health", "environment", "physics"]
+  preferredLifestyle     String[] @default([]) // e.g., ["health", "fitness", "food", "travel"]
+
+  // Notification preferences
+  emailNotifications Boolean @default(false)
+  dailyDigest        Boolean @default(false)
+  breakingNewsAlerts Boolean @default(false)
+
+  // Reading preferences
+  preferredReadingTime   Int    @default(10) // minutes
+  preferredArticleLength String @default("medium") // short, medium, long
 }
 
 model Article {
@@ -42,6 +61,11 @@ model Article {
   savedBy           SavedArticle[]
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
+
+  // Enhanced metadata for better categorization
+  readingTime Int? // Estimated reading time in minutes
+  complexity  String? // simple, medium, complex
+  tags        String[] @default([]) // Additional tags for better matching
 }
 
 model Source {
@@ -60,6 +84,9 @@ model Source {
 model Category {
   id                String            @id @default(auto()) @map("_id") @db.ObjectId
   name              String            @unique
+  description       String?
+  icon              String? // Icon name for UI
+  color             String? // Color for UI
   articleCategories ArticleCategory[]
   userPreferences   UserPreference[]
   createdAt         DateTime          @default(now())
@@ -85,9 +112,23 @@ model UserPreference {
   userId     String   @db.ObjectId
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId String   @db.ObjectId
+  weight     Float    @default(1.0) // Preference weight (0.0 to 2.0)
   createdAt  DateTime @default(now())
 
   @@unique([userId, categoryId])
+}
+
+// User keywords for more granular preferences
+model UserKeyword {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  keyword   String
+  category  String? // Optional category grouping
+  weight    Float    @default(1.0) // Preference weight
+  createdAt DateTime @default(now())
+
+  @@unique([userId, keyword])
 }
 
 model SavedArticle {

@@ -44,6 +44,11 @@ export type ArticleCategory = $Result.DefaultSelection<Prisma.$ArticleCategoryPa
  */
 export type UserPreference = $Result.DefaultSelection<Prisma.$UserPreferencePayload>
 /**
+ * Model UserKeyword
+ * 
+ */
+export type UserKeyword = $Result.DefaultSelection<Prisma.$UserKeywordPayload>
+/**
  * Model SavedArticle
  * 
  */
@@ -218,6 +223,16 @@ export class PrismaClient<
     * ```
     */
   get userPreference(): Prisma.UserPreferenceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userKeyword`: Exposes CRUD operations for the **UserKeyword** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserKeywords
+    * const userKeywords = await prisma.userKeyword.findMany()
+    * ```
+    */
+  get userKeyword(): Prisma.UserKeywordDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.savedArticle`: Exposes CRUD operations for the **SavedArticle** model.
@@ -674,6 +689,7 @@ export namespace Prisma {
     Category: 'Category',
     ArticleCategory: 'ArticleCategory',
     UserPreference: 'UserPreference',
+    UserKeyword: 'UserKeyword',
     SavedArticle: 'SavedArticle'
   };
 
@@ -693,7 +709,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "article" | "source" | "category" | "articleCategory" | "userPreference" | "savedArticle"
+      modelProps: "user" | "article" | "source" | "category" | "articleCategory" | "userPreference" | "userKeyword" | "savedArticle"
       txIsolationLevel: never
     }
     model: {
@@ -1141,6 +1157,80 @@ export namespace Prisma {
           }
         }
       }
+      UserKeyword: {
+        payload: Prisma.$UserKeywordPayload<ExtArgs>
+        fields: Prisma.UserKeywordFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserKeywordFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserKeywordPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserKeywordFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserKeywordPayload>
+          }
+          findFirst: {
+            args: Prisma.UserKeywordFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserKeywordPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserKeywordFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserKeywordPayload>
+          }
+          findMany: {
+            args: Prisma.UserKeywordFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserKeywordPayload>[]
+          }
+          create: {
+            args: Prisma.UserKeywordCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserKeywordPayload>
+          }
+          createMany: {
+            args: Prisma.UserKeywordCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.UserKeywordDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserKeywordPayload>
+          }
+          update: {
+            args: Prisma.UserKeywordUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserKeywordPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserKeywordDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserKeywordUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.UserKeywordUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserKeywordPayload>
+          }
+          aggregate: {
+            args: Prisma.UserKeywordAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserKeyword>
+          }
+          groupBy: {
+            args: Prisma.UserKeywordGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserKeywordGroupByOutputType>[]
+          }
+          findRaw: {
+            args: Prisma.UserKeywordFindRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          aggregateRaw: {
+            args: Prisma.UserKeywordAggregateRawArgs<ExtArgs>
+            result: JsonObject
+          }
+          count: {
+            args: Prisma.UserKeywordCountArgs<ExtArgs>
+            result: $Utils.Optional<UserKeywordCountAggregateOutputType> | number
+          }
+        }
+      }
       SavedArticle: {
         payload: Prisma.$SavedArticlePayload<ExtArgs>
         fields: Prisma.SavedArticleFieldRefs
@@ -1292,6 +1382,7 @@ export namespace Prisma {
     category?: CategoryOmit
     articleCategory?: ArticleCategoryOmit
     userPreference?: UserPreferenceOmit
+    userKeyword?: UserKeywordOmit
     savedArticle?: SavedArticleOmit
   }
 
@@ -1388,11 +1479,13 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     userPreferences: number
+    userKeywords: number
     savedArticles: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userPreferences?: boolean | UserCountOutputTypeCountUserPreferencesArgs
+    userKeywords?: boolean | UserCountOutputTypeCountUserKeywordsArgs
     savedArticles?: boolean | UserCountOutputTypeCountSavedArticlesArgs
   }
 
@@ -1412,6 +1505,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountUserPreferencesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserPreferenceWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountUserKeywordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserKeywordWhereInput
   }
 
   /**
@@ -1543,8 +1643,18 @@ export namespace Prisma {
 
   export type AggregateUser = {
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
+  }
+
+  export type UserAvgAggregateOutputType = {
+    preferredReadingTime: number | null
+  }
+
+  export type UserSumAggregateOutputType = {
+    preferredReadingTime: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -1555,6 +1665,11 @@ export namespace Prisma {
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    emailNotifications: boolean | null
+    dailyDigest: boolean | null
+    breakingNewsAlerts: boolean | null
+    preferredReadingTime: number | null
+    preferredArticleLength: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1565,6 +1680,11 @@ export namespace Prisma {
     image: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    emailNotifications: boolean | null
+    dailyDigest: boolean | null
+    breakingNewsAlerts: boolean | null
+    preferredReadingTime: number | null
+    preferredArticleLength: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1575,9 +1695,29 @@ export namespace Prisma {
     image: number
     createdAt: number
     updatedAt: number
+    preferredSports: number
+    preferredPolitics: number
+    preferredTech: number
+    preferredBusiness: number
+    preferredEntertainment: number
+    preferredScience: number
+    preferredLifestyle: number
+    emailNotifications: number
+    dailyDigest: number
+    breakingNewsAlerts: number
+    preferredReadingTime: number
+    preferredArticleLength: number
     _all: number
   }
 
+
+  export type UserAvgAggregateInputType = {
+    preferredReadingTime?: true
+  }
+
+  export type UserSumAggregateInputType = {
+    preferredReadingTime?: true
+  }
 
   export type UserMinAggregateInputType = {
     id?: true
@@ -1587,6 +1727,11 @@ export namespace Prisma {
     image?: true
     createdAt?: true
     updatedAt?: true
+    emailNotifications?: true
+    dailyDigest?: true
+    breakingNewsAlerts?: true
+    preferredReadingTime?: true
+    preferredArticleLength?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1597,6 +1742,11 @@ export namespace Prisma {
     image?: true
     createdAt?: true
     updatedAt?: true
+    emailNotifications?: true
+    dailyDigest?: true
+    breakingNewsAlerts?: true
+    preferredReadingTime?: true
+    preferredArticleLength?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1607,6 +1757,18 @@ export namespace Prisma {
     image?: true
     createdAt?: true
     updatedAt?: true
+    preferredSports?: true
+    preferredPolitics?: true
+    preferredTech?: true
+    preferredBusiness?: true
+    preferredEntertainment?: true
+    preferredScience?: true
+    preferredLifestyle?: true
+    emailNotifications?: true
+    dailyDigest?: true
+    breakingNewsAlerts?: true
+    preferredReadingTime?: true
+    preferredArticleLength?: true
     _all?: true
   }
 
@@ -1648,6 +1810,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserMinAggregateInputType
@@ -1678,6 +1852,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserCountAggregateInputType | true
+    _avg?: UserAvgAggregateInputType
+    _sum?: UserSumAggregateInputType
     _min?: UserMinAggregateInputType
     _max?: UserMaxAggregateInputType
   }
@@ -1690,7 +1866,21 @@ export namespace Prisma {
     image: string | null
     createdAt: Date
     updatedAt: Date
+    preferredSports: string[]
+    preferredPolitics: string[]
+    preferredTech: string[]
+    preferredBusiness: string[]
+    preferredEntertainment: string[]
+    preferredScience: string[]
+    preferredLifestyle: string[]
+    emailNotifications: boolean
+    dailyDigest: boolean
+    breakingNewsAlerts: boolean
+    preferredReadingTime: number
+    preferredArticleLength: string
     _count: UserCountAggregateOutputType | null
+    _avg: UserAvgAggregateOutputType | null
+    _sum: UserSumAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
   }
@@ -1717,7 +1907,20 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    preferredSports?: boolean
+    preferredPolitics?: boolean
+    preferredTech?: boolean
+    preferredBusiness?: boolean
+    preferredEntertainment?: boolean
+    preferredScience?: boolean
+    preferredLifestyle?: boolean
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: boolean
+    preferredArticleLength?: boolean
     userPreferences?: boolean | User$userPreferencesArgs<ExtArgs>
+    userKeywords?: boolean | User$userKeywordsArgs<ExtArgs>
     savedArticles?: boolean | User$savedArticlesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -1732,11 +1935,24 @@ export namespace Prisma {
     image?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    preferredSports?: boolean
+    preferredPolitics?: boolean
+    preferredTech?: boolean
+    preferredBusiness?: boolean
+    preferredEntertainment?: boolean
+    preferredScience?: boolean
+    preferredLifestyle?: boolean
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: boolean
+    preferredArticleLength?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkId" | "email" | "name" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkId" | "email" | "name" | "image" | "createdAt" | "updatedAt" | "preferredSports" | "preferredPolitics" | "preferredTech" | "preferredBusiness" | "preferredEntertainment" | "preferredScience" | "preferredLifestyle" | "emailNotifications" | "dailyDigest" | "breakingNewsAlerts" | "preferredReadingTime" | "preferredArticleLength", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userPreferences?: boolean | User$userPreferencesArgs<ExtArgs>
+    userKeywords?: boolean | User$userKeywordsArgs<ExtArgs>
     savedArticles?: boolean | User$savedArticlesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -1745,6 +1961,7 @@ export namespace Prisma {
     name: "User"
     objects: {
       userPreferences: Prisma.$UserPreferencePayload<ExtArgs>[]
+      userKeywords: Prisma.$UserKeywordPayload<ExtArgs>[]
       savedArticles: Prisma.$SavedArticlePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -1755,6 +1972,18 @@ export namespace Prisma {
       image: string | null
       createdAt: Date
       updatedAt: Date
+      preferredSports: string[]
+      preferredPolitics: string[]
+      preferredTech: string[]
+      preferredBusiness: string[]
+      preferredEntertainment: string[]
+      preferredScience: string[]
+      preferredLifestyle: string[]
+      emailNotifications: boolean
+      dailyDigest: boolean
+      breakingNewsAlerts: boolean
+      preferredReadingTime: number
+      preferredArticleLength: string
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2119,6 +2348,7 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     userPreferences<T extends User$userPreferencesArgs<ExtArgs> = {}>(args?: Subset<T, User$userPreferencesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPreferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    userKeywords<T extends User$userKeywordsArgs<ExtArgs> = {}>(args?: Subset<T, User$userKeywordsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     savedArticles<T extends User$savedArticlesArgs<ExtArgs> = {}>(args?: Subset<T, User$savedArticlesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SavedArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2156,6 +2386,18 @@ export namespace Prisma {
     readonly image: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly preferredSports: FieldRef<"User", 'String[]'>
+    readonly preferredPolitics: FieldRef<"User", 'String[]'>
+    readonly preferredTech: FieldRef<"User", 'String[]'>
+    readonly preferredBusiness: FieldRef<"User", 'String[]'>
+    readonly preferredEntertainment: FieldRef<"User", 'String[]'>
+    readonly preferredScience: FieldRef<"User", 'String[]'>
+    readonly preferredLifestyle: FieldRef<"User", 'String[]'>
+    readonly emailNotifications: FieldRef<"User", 'Boolean'>
+    readonly dailyDigest: FieldRef<"User", 'Boolean'>
+    readonly breakingNewsAlerts: FieldRef<"User", 'Boolean'>
+    readonly preferredReadingTime: FieldRef<"User", 'Int'>
+    readonly preferredArticleLength: FieldRef<"User", 'String'>
   }
     
 
@@ -2550,6 +2792,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.userKeywords
+   */
+  export type User$userKeywordsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    where?: UserKeywordWhereInput
+    orderBy?: UserKeywordOrderByWithRelationInput | UserKeywordOrderByWithRelationInput[]
+    cursor?: UserKeywordWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserKeywordScalarFieldEnum | UserKeywordScalarFieldEnum[]
+  }
+
+  /**
    * User.savedArticles
    */
   export type User$savedArticlesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2598,8 +2864,18 @@ export namespace Prisma {
 
   export type AggregateArticle = {
     _count: ArticleCountAggregateOutputType | null
+    _avg: ArticleAvgAggregateOutputType | null
+    _sum: ArticleSumAggregateOutputType | null
     _min: ArticleMinAggregateOutputType | null
     _max: ArticleMaxAggregateOutputType | null
+  }
+
+  export type ArticleAvgAggregateOutputType = {
+    readingTime: number | null
+  }
+
+  export type ArticleSumAggregateOutputType = {
+    readingTime: number | null
   }
 
   export type ArticleMinAggregateOutputType = {
@@ -2615,6 +2891,8 @@ export namespace Prisma {
     summary: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    readingTime: number | null
+    complexity: string | null
   }
 
   export type ArticleMaxAggregateOutputType = {
@@ -2630,6 +2908,8 @@ export namespace Prisma {
     summary: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    readingTime: number | null
+    complexity: string | null
   }
 
   export type ArticleCountAggregateOutputType = {
@@ -2645,9 +2925,20 @@ export namespace Prisma {
     summary: number
     createdAt: number
     updatedAt: number
+    readingTime: number
+    complexity: number
+    tags: number
     _all: number
   }
 
+
+  export type ArticleAvgAggregateInputType = {
+    readingTime?: true
+  }
+
+  export type ArticleSumAggregateInputType = {
+    readingTime?: true
+  }
 
   export type ArticleMinAggregateInputType = {
     id?: true
@@ -2662,6 +2953,8 @@ export namespace Prisma {
     summary?: true
     createdAt?: true
     updatedAt?: true
+    readingTime?: true
+    complexity?: true
   }
 
   export type ArticleMaxAggregateInputType = {
@@ -2677,6 +2970,8 @@ export namespace Prisma {
     summary?: true
     createdAt?: true
     updatedAt?: true
+    readingTime?: true
+    complexity?: true
   }
 
   export type ArticleCountAggregateInputType = {
@@ -2692,6 +2987,9 @@ export namespace Prisma {
     summary?: true
     createdAt?: true
     updatedAt?: true
+    readingTime?: true
+    complexity?: true
+    tags?: true
     _all?: true
   }
 
@@ -2733,6 +3031,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ArticleAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ArticleSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ArticleMinAggregateInputType
@@ -2763,6 +3073,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ArticleCountAggregateInputType | true
+    _avg?: ArticleAvgAggregateInputType
+    _sum?: ArticleSumAggregateInputType
     _min?: ArticleMinAggregateInputType
     _max?: ArticleMaxAggregateInputType
   }
@@ -2780,7 +3092,12 @@ export namespace Prisma {
     summary: string | null
     createdAt: Date
     updatedAt: Date
+    readingTime: number | null
+    complexity: string | null
+    tags: string[]
     _count: ArticleCountAggregateOutputType | null
+    _avg: ArticleAvgAggregateOutputType | null
+    _sum: ArticleSumAggregateOutputType | null
     _min: ArticleMinAggregateOutputType | null
     _max: ArticleMaxAggregateOutputType | null
   }
@@ -2812,6 +3129,9 @@ export namespace Prisma {
     summary?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    readingTime?: boolean
+    complexity?: boolean
+    tags?: boolean
     source?: boolean | Article$sourceArgs<ExtArgs>
     articleCategories?: boolean | Article$articleCategoriesArgs<ExtArgs>
     savedBy?: boolean | Article$savedByArgs<ExtArgs>
@@ -2833,9 +3153,12 @@ export namespace Prisma {
     summary?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    readingTime?: boolean
+    complexity?: boolean
+    tags?: boolean
   }
 
-  export type ArticleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "content" | "url" | "urlToImage" | "publishedAt" | "sourceId" | "sentiment" | "summary" | "createdAt" | "updatedAt", ExtArgs["result"]["article"]>
+  export type ArticleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "content" | "url" | "urlToImage" | "publishedAt" | "sourceId" | "sentiment" | "summary" | "createdAt" | "updatedAt" | "readingTime" | "complexity" | "tags", ExtArgs["result"]["article"]>
   export type ArticleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     source?: boolean | Article$sourceArgs<ExtArgs>
     articleCategories?: boolean | Article$articleCategoriesArgs<ExtArgs>
@@ -2863,6 +3186,9 @@ export namespace Prisma {
       summary: string | null
       createdAt: Date
       updatedAt: Date
+      readingTime: number | null
+      complexity: string | null
+      tags: string[]
     }, ExtArgs["result"]["article"]>
     composites: {}
   }
@@ -3270,6 +3596,9 @@ export namespace Prisma {
     readonly summary: FieldRef<"Article", 'String'>
     readonly createdAt: FieldRef<"Article", 'DateTime'>
     readonly updatedAt: FieldRef<"Article", 'DateTime'>
+    readonly readingTime: FieldRef<"Article", 'Int'>
+    readonly complexity: FieldRef<"Article", 'String'>
+    readonly tags: FieldRef<"Article", 'String[]'>
   }
     
 
@@ -4787,6 +5116,9 @@ export namespace Prisma {
   export type CategoryMinAggregateOutputType = {
     id: string | null
     name: string | null
+    description: string | null
+    icon: string | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4794,6 +5126,9 @@ export namespace Prisma {
   export type CategoryMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    description: string | null
+    icon: string | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4801,6 +5136,9 @@ export namespace Prisma {
   export type CategoryCountAggregateOutputType = {
     id: number
     name: number
+    description: number
+    icon: number
+    color: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4810,6 +5148,9 @@ export namespace Prisma {
   export type CategoryMinAggregateInputType = {
     id?: true
     name?: true
+    description?: true
+    icon?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4817,6 +5158,9 @@ export namespace Prisma {
   export type CategoryMaxAggregateInputType = {
     id?: true
     name?: true
+    description?: true
+    icon?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4824,6 +5168,9 @@ export namespace Prisma {
   export type CategoryCountAggregateInputType = {
     id?: true
     name?: true
+    description?: true
+    icon?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4904,6 +5251,9 @@ export namespace Prisma {
   export type CategoryGroupByOutputType = {
     id: string
     name: string
+    description: string | null
+    icon: string | null
+    color: string | null
     createdAt: Date
     updatedAt: Date
     _count: CategoryCountAggregateOutputType | null
@@ -4928,6 +5278,9 @@ export namespace Prisma {
   export type CategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    description?: boolean
+    icon?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     articleCategories?: boolean | Category$articleCategoriesArgs<ExtArgs>
@@ -4940,11 +5293,14 @@ export namespace Prisma {
   export type CategorySelectScalar = {
     id?: boolean
     name?: boolean
+    description?: boolean
+    icon?: boolean
+    color?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
+  export type CategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "icon" | "color" | "createdAt" | "updatedAt", ExtArgs["result"]["category"]>
   export type CategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     articleCategories?: boolean | Category$articleCategoriesArgs<ExtArgs>
     userPreferences?: boolean | Category$userPreferencesArgs<ExtArgs>
@@ -4960,6 +5316,9 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      description: string | null
+      icon: string | null
+      color: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["category"]>
@@ -5358,6 +5717,9 @@ export namespace Prisma {
   interface CategoryFieldRefs {
     readonly id: FieldRef<"Category", 'String'>
     readonly name: FieldRef<"Category", 'String'>
+    readonly description: FieldRef<"Category", 'String'>
+    readonly icon: FieldRef<"Category", 'String'>
+    readonly color: FieldRef<"Category", 'String'>
     readonly createdAt: FieldRef<"Category", 'DateTime'>
     readonly updatedAt: FieldRef<"Category", 'DateTime'>
   }
@@ -6774,14 +7136,25 @@ export namespace Prisma {
 
   export type AggregateUserPreference = {
     _count: UserPreferenceCountAggregateOutputType | null
+    _avg: UserPreferenceAvgAggregateOutputType | null
+    _sum: UserPreferenceSumAggregateOutputType | null
     _min: UserPreferenceMinAggregateOutputType | null
     _max: UserPreferenceMaxAggregateOutputType | null
+  }
+
+  export type UserPreferenceAvgAggregateOutputType = {
+    weight: number | null
+  }
+
+  export type UserPreferenceSumAggregateOutputType = {
+    weight: number | null
   }
 
   export type UserPreferenceMinAggregateOutputType = {
     id: string | null
     userId: string | null
     categoryId: string | null
+    weight: number | null
     createdAt: Date | null
   }
 
@@ -6789,6 +7162,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     categoryId: string | null
+    weight: number | null
     createdAt: Date | null
   }
 
@@ -6796,15 +7170,25 @@ export namespace Prisma {
     id: number
     userId: number
     categoryId: number
+    weight: number
     createdAt: number
     _all: number
   }
 
 
+  export type UserPreferenceAvgAggregateInputType = {
+    weight?: true
+  }
+
+  export type UserPreferenceSumAggregateInputType = {
+    weight?: true
+  }
+
   export type UserPreferenceMinAggregateInputType = {
     id?: true
     userId?: true
     categoryId?: true
+    weight?: true
     createdAt?: true
   }
 
@@ -6812,6 +7196,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     categoryId?: true
+    weight?: true
     createdAt?: true
   }
 
@@ -6819,6 +7204,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     categoryId?: true
+    weight?: true
     createdAt?: true
     _all?: true
   }
@@ -6861,6 +7247,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: UserPreferenceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserPreferenceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: UserPreferenceMinAggregateInputType
@@ -6891,6 +7289,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: UserPreferenceCountAggregateInputType | true
+    _avg?: UserPreferenceAvgAggregateInputType
+    _sum?: UserPreferenceSumAggregateInputType
     _min?: UserPreferenceMinAggregateInputType
     _max?: UserPreferenceMaxAggregateInputType
   }
@@ -6899,8 +7299,11 @@ export namespace Prisma {
     id: string
     userId: string
     categoryId: string
+    weight: number
     createdAt: Date
     _count: UserPreferenceCountAggregateOutputType | null
+    _avg: UserPreferenceAvgAggregateOutputType | null
+    _sum: UserPreferenceSumAggregateOutputType | null
     _min: UserPreferenceMinAggregateOutputType | null
     _max: UserPreferenceMaxAggregateOutputType | null
   }
@@ -6923,6 +7326,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     categoryId?: boolean
+    weight?: boolean
     createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -6934,10 +7338,11 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     categoryId?: boolean
+    weight?: boolean
     createdAt?: boolean
   }
 
-  export type UserPreferenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "categoryId" | "createdAt", ExtArgs["result"]["userPreference"]>
+  export type UserPreferenceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "categoryId" | "weight" | "createdAt", ExtArgs["result"]["userPreference"]>
   export type UserPreferenceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -6953,6 +7358,7 @@ export namespace Prisma {
       id: string
       userId: string
       categoryId: string
+      weight: number
       createdAt: Date
     }, ExtArgs["result"]["userPreference"]>
     composites: {}
@@ -7351,6 +7757,7 @@ export namespace Prisma {
     readonly id: FieldRef<"UserPreference", 'String'>
     readonly userId: FieldRef<"UserPreference", 'String'>
     readonly categoryId: FieldRef<"UserPreference", 'String'>
+    readonly weight: FieldRef<"UserPreference", 'Float'>
     readonly createdAt: FieldRef<"UserPreference", 'DateTime'>
   }
     
@@ -7737,6 +8144,1030 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserPreferenceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserKeyword
+   */
+
+  export type AggregateUserKeyword = {
+    _count: UserKeywordCountAggregateOutputType | null
+    _avg: UserKeywordAvgAggregateOutputType | null
+    _sum: UserKeywordSumAggregateOutputType | null
+    _min: UserKeywordMinAggregateOutputType | null
+    _max: UserKeywordMaxAggregateOutputType | null
+  }
+
+  export type UserKeywordAvgAggregateOutputType = {
+    weight: number | null
+  }
+
+  export type UserKeywordSumAggregateOutputType = {
+    weight: number | null
+  }
+
+  export type UserKeywordMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    keyword: string | null
+    category: string | null
+    weight: number | null
+    createdAt: Date | null
+  }
+
+  export type UserKeywordMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    keyword: string | null
+    category: string | null
+    weight: number | null
+    createdAt: Date | null
+  }
+
+  export type UserKeywordCountAggregateOutputType = {
+    id: number
+    userId: number
+    keyword: number
+    category: number
+    weight: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type UserKeywordAvgAggregateInputType = {
+    weight?: true
+  }
+
+  export type UserKeywordSumAggregateInputType = {
+    weight?: true
+  }
+
+  export type UserKeywordMinAggregateInputType = {
+    id?: true
+    userId?: true
+    keyword?: true
+    category?: true
+    weight?: true
+    createdAt?: true
+  }
+
+  export type UserKeywordMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    keyword?: true
+    category?: true
+    weight?: true
+    createdAt?: true
+  }
+
+  export type UserKeywordCountAggregateInputType = {
+    id?: true
+    userId?: true
+    keyword?: true
+    category?: true
+    weight?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type UserKeywordAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserKeyword to aggregate.
+     */
+    where?: UserKeywordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserKeywords to fetch.
+     */
+    orderBy?: UserKeywordOrderByWithRelationInput | UserKeywordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserKeywordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserKeywords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserKeywords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserKeywords
+    **/
+    _count?: true | UserKeywordCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserKeywordAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserKeywordSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserKeywordMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserKeywordMaxAggregateInputType
+  }
+
+  export type GetUserKeywordAggregateType<T extends UserKeywordAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserKeyword]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserKeyword[P]>
+      : GetScalarType<T[P], AggregateUserKeyword[P]>
+  }
+
+
+
+
+  export type UserKeywordGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserKeywordWhereInput
+    orderBy?: UserKeywordOrderByWithAggregationInput | UserKeywordOrderByWithAggregationInput[]
+    by: UserKeywordScalarFieldEnum[] | UserKeywordScalarFieldEnum
+    having?: UserKeywordScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserKeywordCountAggregateInputType | true
+    _avg?: UserKeywordAvgAggregateInputType
+    _sum?: UserKeywordSumAggregateInputType
+    _min?: UserKeywordMinAggregateInputType
+    _max?: UserKeywordMaxAggregateInputType
+  }
+
+  export type UserKeywordGroupByOutputType = {
+    id: string
+    userId: string
+    keyword: string
+    category: string | null
+    weight: number
+    createdAt: Date
+    _count: UserKeywordCountAggregateOutputType | null
+    _avg: UserKeywordAvgAggregateOutputType | null
+    _sum: UserKeywordSumAggregateOutputType | null
+    _min: UserKeywordMinAggregateOutputType | null
+    _max: UserKeywordMaxAggregateOutputType | null
+  }
+
+  type GetUserKeywordGroupByPayload<T extends UserKeywordGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserKeywordGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserKeywordGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserKeywordGroupByOutputType[P]>
+            : GetScalarType<T[P], UserKeywordGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserKeywordSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    keyword?: boolean
+    category?: boolean
+    weight?: boolean
+    createdAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userKeyword"]>
+
+
+
+  export type UserKeywordSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    keyword?: boolean
+    category?: boolean
+    weight?: boolean
+    createdAt?: boolean
+  }
+
+  export type UserKeywordOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "keyword" | "category" | "weight" | "createdAt", ExtArgs["result"]["userKeyword"]>
+  export type UserKeywordInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserKeywordPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserKeyword"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      keyword: string
+      category: string | null
+      weight: number
+      createdAt: Date
+    }, ExtArgs["result"]["userKeyword"]>
+    composites: {}
+  }
+
+  type UserKeywordGetPayload<S extends boolean | null | undefined | UserKeywordDefaultArgs> = $Result.GetResult<Prisma.$UserKeywordPayload, S>
+
+  type UserKeywordCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserKeywordFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserKeywordCountAggregateInputType | true
+    }
+
+  export interface UserKeywordDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserKeyword'], meta: { name: 'UserKeyword' } }
+    /**
+     * Find zero or one UserKeyword that matches the filter.
+     * @param {UserKeywordFindUniqueArgs} args - Arguments to find a UserKeyword
+     * @example
+     * // Get one UserKeyword
+     * const userKeyword = await prisma.userKeyword.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserKeywordFindUniqueArgs>(args: SelectSubset<T, UserKeywordFindUniqueArgs<ExtArgs>>): Prisma__UserKeywordClient<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserKeyword that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserKeywordFindUniqueOrThrowArgs} args - Arguments to find a UserKeyword
+     * @example
+     * // Get one UserKeyword
+     * const userKeyword = await prisma.userKeyword.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserKeywordFindUniqueOrThrowArgs>(args: SelectSubset<T, UserKeywordFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserKeywordClient<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserKeyword that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserKeywordFindFirstArgs} args - Arguments to find a UserKeyword
+     * @example
+     * // Get one UserKeyword
+     * const userKeyword = await prisma.userKeyword.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserKeywordFindFirstArgs>(args?: SelectSubset<T, UserKeywordFindFirstArgs<ExtArgs>>): Prisma__UserKeywordClient<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserKeyword that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserKeywordFindFirstOrThrowArgs} args - Arguments to find a UserKeyword
+     * @example
+     * // Get one UserKeyword
+     * const userKeyword = await prisma.userKeyword.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserKeywordFindFirstOrThrowArgs>(args?: SelectSubset<T, UserKeywordFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserKeywordClient<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserKeywords that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserKeywordFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserKeywords
+     * const userKeywords = await prisma.userKeyword.findMany()
+     * 
+     * // Get first 10 UserKeywords
+     * const userKeywords = await prisma.userKeyword.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userKeywordWithIdOnly = await prisma.userKeyword.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserKeywordFindManyArgs>(args?: SelectSubset<T, UserKeywordFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserKeyword.
+     * @param {UserKeywordCreateArgs} args - Arguments to create a UserKeyword.
+     * @example
+     * // Create one UserKeyword
+     * const UserKeyword = await prisma.userKeyword.create({
+     *   data: {
+     *     // ... data to create a UserKeyword
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserKeywordCreateArgs>(args: SelectSubset<T, UserKeywordCreateArgs<ExtArgs>>): Prisma__UserKeywordClient<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserKeywords.
+     * @param {UserKeywordCreateManyArgs} args - Arguments to create many UserKeywords.
+     * @example
+     * // Create many UserKeywords
+     * const userKeyword = await prisma.userKeyword.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserKeywordCreateManyArgs>(args?: SelectSubset<T, UserKeywordCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a UserKeyword.
+     * @param {UserKeywordDeleteArgs} args - Arguments to delete one UserKeyword.
+     * @example
+     * // Delete one UserKeyword
+     * const UserKeyword = await prisma.userKeyword.delete({
+     *   where: {
+     *     // ... filter to delete one UserKeyword
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserKeywordDeleteArgs>(args: SelectSubset<T, UserKeywordDeleteArgs<ExtArgs>>): Prisma__UserKeywordClient<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserKeyword.
+     * @param {UserKeywordUpdateArgs} args - Arguments to update one UserKeyword.
+     * @example
+     * // Update one UserKeyword
+     * const userKeyword = await prisma.userKeyword.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserKeywordUpdateArgs>(args: SelectSubset<T, UserKeywordUpdateArgs<ExtArgs>>): Prisma__UserKeywordClient<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserKeywords.
+     * @param {UserKeywordDeleteManyArgs} args - Arguments to filter UserKeywords to delete.
+     * @example
+     * // Delete a few UserKeywords
+     * const { count } = await prisma.userKeyword.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserKeywordDeleteManyArgs>(args?: SelectSubset<T, UserKeywordDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserKeywords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserKeywordUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserKeywords
+     * const userKeyword = await prisma.userKeyword.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserKeywordUpdateManyArgs>(args: SelectSubset<T, UserKeywordUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one UserKeyword.
+     * @param {UserKeywordUpsertArgs} args - Arguments to update or create a UserKeyword.
+     * @example
+     * // Update or create a UserKeyword
+     * const userKeyword = await prisma.userKeyword.upsert({
+     *   create: {
+     *     // ... data to create a UserKeyword
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserKeyword we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserKeywordUpsertArgs>(args: SelectSubset<T, UserKeywordUpsertArgs<ExtArgs>>): Prisma__UserKeywordClient<$Result.GetResult<Prisma.$UserKeywordPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserKeywords that matches the filter.
+     * @param {UserKeywordFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const userKeyword = await prisma.userKeyword.findRaw({
+     *   filter: { age: { $gt: 25 } }
+     * })
+     */
+    findRaw(args?: UserKeywordFindRawArgs): Prisma.PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a UserKeyword.
+     * @param {UserKeywordAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const userKeyword = await prisma.userKeyword.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+     */
+    aggregateRaw(args?: UserKeywordAggregateRawArgs): Prisma.PrismaPromise<JsonObject>
+
+
+    /**
+     * Count the number of UserKeywords.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserKeywordCountArgs} args - Arguments to filter UserKeywords to count.
+     * @example
+     * // Count the number of UserKeywords
+     * const count = await prisma.userKeyword.count({
+     *   where: {
+     *     // ... the filter for the UserKeywords we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserKeywordCountArgs>(
+      args?: Subset<T, UserKeywordCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserKeywordCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserKeyword.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserKeywordAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserKeywordAggregateArgs>(args: Subset<T, UserKeywordAggregateArgs>): Prisma.PrismaPromise<GetUserKeywordAggregateType<T>>
+
+    /**
+     * Group by UserKeyword.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserKeywordGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserKeywordGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserKeywordGroupByArgs['orderBy'] }
+        : { orderBy?: UserKeywordGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserKeywordGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserKeywordGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserKeyword model
+   */
+  readonly fields: UserKeywordFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserKeyword.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserKeywordClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserKeyword model
+   */
+  interface UserKeywordFieldRefs {
+    readonly id: FieldRef<"UserKeyword", 'String'>
+    readonly userId: FieldRef<"UserKeyword", 'String'>
+    readonly keyword: FieldRef<"UserKeyword", 'String'>
+    readonly category: FieldRef<"UserKeyword", 'String'>
+    readonly weight: FieldRef<"UserKeyword", 'Float'>
+    readonly createdAt: FieldRef<"UserKeyword", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserKeyword findUnique
+   */
+  export type UserKeywordFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    /**
+     * Filter, which UserKeyword to fetch.
+     */
+    where: UserKeywordWhereUniqueInput
+  }
+
+  /**
+   * UserKeyword findUniqueOrThrow
+   */
+  export type UserKeywordFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    /**
+     * Filter, which UserKeyword to fetch.
+     */
+    where: UserKeywordWhereUniqueInput
+  }
+
+  /**
+   * UserKeyword findFirst
+   */
+  export type UserKeywordFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    /**
+     * Filter, which UserKeyword to fetch.
+     */
+    where?: UserKeywordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserKeywords to fetch.
+     */
+    orderBy?: UserKeywordOrderByWithRelationInput | UserKeywordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserKeywords.
+     */
+    cursor?: UserKeywordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserKeywords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserKeywords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserKeywords.
+     */
+    distinct?: UserKeywordScalarFieldEnum | UserKeywordScalarFieldEnum[]
+  }
+
+  /**
+   * UserKeyword findFirstOrThrow
+   */
+  export type UserKeywordFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    /**
+     * Filter, which UserKeyword to fetch.
+     */
+    where?: UserKeywordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserKeywords to fetch.
+     */
+    orderBy?: UserKeywordOrderByWithRelationInput | UserKeywordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserKeywords.
+     */
+    cursor?: UserKeywordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserKeywords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserKeywords.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserKeywords.
+     */
+    distinct?: UserKeywordScalarFieldEnum | UserKeywordScalarFieldEnum[]
+  }
+
+  /**
+   * UserKeyword findMany
+   */
+  export type UserKeywordFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    /**
+     * Filter, which UserKeywords to fetch.
+     */
+    where?: UserKeywordWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserKeywords to fetch.
+     */
+    orderBy?: UserKeywordOrderByWithRelationInput | UserKeywordOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserKeywords.
+     */
+    cursor?: UserKeywordWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserKeywords from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserKeywords.
+     */
+    skip?: number
+    distinct?: UserKeywordScalarFieldEnum | UserKeywordScalarFieldEnum[]
+  }
+
+  /**
+   * UserKeyword create
+   */
+  export type UserKeywordCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserKeyword.
+     */
+    data: XOR<UserKeywordCreateInput, UserKeywordUncheckedCreateInput>
+  }
+
+  /**
+   * UserKeyword createMany
+   */
+  export type UserKeywordCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserKeywords.
+     */
+    data: UserKeywordCreateManyInput | UserKeywordCreateManyInput[]
+  }
+
+  /**
+   * UserKeyword update
+   */
+  export type UserKeywordUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserKeyword.
+     */
+    data: XOR<UserKeywordUpdateInput, UserKeywordUncheckedUpdateInput>
+    /**
+     * Choose, which UserKeyword to update.
+     */
+    where: UserKeywordWhereUniqueInput
+  }
+
+  /**
+   * UserKeyword updateMany
+   */
+  export type UserKeywordUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserKeywords.
+     */
+    data: XOR<UserKeywordUpdateManyMutationInput, UserKeywordUncheckedUpdateManyInput>
+    /**
+     * Filter which UserKeywords to update
+     */
+    where?: UserKeywordWhereInput
+    /**
+     * Limit how many UserKeywords to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserKeyword upsert
+   */
+  export type UserKeywordUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserKeyword to update in case it exists.
+     */
+    where: UserKeywordWhereUniqueInput
+    /**
+     * In case the UserKeyword found by the `where` argument doesn't exist, create a new UserKeyword with this data.
+     */
+    create: XOR<UserKeywordCreateInput, UserKeywordUncheckedCreateInput>
+    /**
+     * In case the UserKeyword was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserKeywordUpdateInput, UserKeywordUncheckedUpdateInput>
+  }
+
+  /**
+   * UserKeyword delete
+   */
+  export type UserKeywordDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
+    /**
+     * Filter which UserKeyword to delete.
+     */
+    where: UserKeywordWhereUniqueInput
+  }
+
+  /**
+   * UserKeyword deleteMany
+   */
+  export type UserKeywordDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserKeywords to delete
+     */
+    where?: UserKeywordWhereInput
+    /**
+     * Limit how many UserKeywords to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserKeyword findRaw
+   */
+  export type UserKeywordFindRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     */
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * UserKeyword aggregateRaw
+   */
+  export type UserKeywordAggregateRawArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     */
+    pipeline?: InputJsonValue[]
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     */
+    options?: InputJsonValue
+  }
+
+  /**
+   * UserKeyword without action
+   */
+  export type UserKeywordDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserKeyword
+     */
+    select?: UserKeywordSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserKeyword
+     */
+    omit?: UserKeywordOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserKeywordInclude<ExtArgs> | null
   }
 
 
@@ -8723,7 +10154,19 @@ export namespace Prisma {
     name: 'name',
     image: 'image',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    preferredSports: 'preferredSports',
+    preferredPolitics: 'preferredPolitics',
+    preferredTech: 'preferredTech',
+    preferredBusiness: 'preferredBusiness',
+    preferredEntertainment: 'preferredEntertainment',
+    preferredScience: 'preferredScience',
+    preferredLifestyle: 'preferredLifestyle',
+    emailNotifications: 'emailNotifications',
+    dailyDigest: 'dailyDigest',
+    breakingNewsAlerts: 'breakingNewsAlerts',
+    preferredReadingTime: 'preferredReadingTime',
+    preferredArticleLength: 'preferredArticleLength'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -8741,7 +10184,10 @@ export namespace Prisma {
     sentiment: 'sentiment',
     summary: 'summary',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    readingTime: 'readingTime',
+    complexity: 'complexity',
+    tags: 'tags'
   };
 
   export type ArticleScalarFieldEnum = (typeof ArticleScalarFieldEnum)[keyof typeof ArticleScalarFieldEnum]
@@ -8765,6 +10211,9 @@ export namespace Prisma {
   export const CategoryScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    description: 'description',
+    icon: 'icon',
+    color: 'color',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8786,10 +10235,23 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     categoryId: 'categoryId',
+    weight: 'weight',
     createdAt: 'createdAt'
   };
 
   export type UserPreferenceScalarFieldEnum = (typeof UserPreferenceScalarFieldEnum)[keyof typeof UserPreferenceScalarFieldEnum]
+
+
+  export const UserKeywordScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    keyword: 'keyword',
+    category: 'category',
+    weight: 'weight',
+    createdAt: 'createdAt'
+  };
+
+  export type UserKeywordScalarFieldEnum = (typeof UserKeywordScalarFieldEnum)[keyof typeof UserKeywordScalarFieldEnum]
 
 
   export const SavedArticleScalarFieldEnum: {
@@ -8852,16 +10314,9 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Sentiment'
+   * Reference to a field of type 'Boolean'
    */
-  export type EnumSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sentiment'>
-    
-
-
-  /**
-   * Reference to a field of type 'Sentiment[]'
-   */
-  export type ListEnumSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sentiment[]'>
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -8876,6 +10331,34 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Sentiment'
+   */
+  export type EnumSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sentiment'>
+    
+
+
+  /**
+   * Reference to a field of type 'Sentiment[]'
+   */
+  export type ListEnumSentimentFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Sentiment[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -8893,7 +10376,20 @@ export namespace Prisma {
     image?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    preferredSports?: StringNullableListFilter<"User">
+    preferredPolitics?: StringNullableListFilter<"User">
+    preferredTech?: StringNullableListFilter<"User">
+    preferredBusiness?: StringNullableListFilter<"User">
+    preferredEntertainment?: StringNullableListFilter<"User">
+    preferredScience?: StringNullableListFilter<"User">
+    preferredLifestyle?: StringNullableListFilter<"User">
+    emailNotifications?: BoolFilter<"User"> | boolean
+    dailyDigest?: BoolFilter<"User"> | boolean
+    breakingNewsAlerts?: BoolFilter<"User"> | boolean
+    preferredReadingTime?: IntFilter<"User"> | number
+    preferredArticleLength?: StringFilter<"User"> | string
     userPreferences?: UserPreferenceListRelationFilter
+    userKeywords?: UserKeywordListRelationFilter
     savedArticles?: SavedArticleListRelationFilter
   }
 
@@ -8905,7 +10401,20 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    preferredSports?: SortOrder
+    preferredPolitics?: SortOrder
+    preferredTech?: SortOrder
+    preferredBusiness?: SortOrder
+    preferredEntertainment?: SortOrder
+    preferredScience?: SortOrder
+    preferredLifestyle?: SortOrder
+    emailNotifications?: SortOrder
+    dailyDigest?: SortOrder
+    breakingNewsAlerts?: SortOrder
+    preferredReadingTime?: SortOrder
+    preferredArticleLength?: SortOrder
     userPreferences?: UserPreferenceOrderByRelationAggregateInput
+    userKeywords?: UserKeywordOrderByRelationAggregateInput
     savedArticles?: SavedArticleOrderByRelationAggregateInput
   }
 
@@ -8920,7 +10429,20 @@ export namespace Prisma {
     image?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    preferredSports?: StringNullableListFilter<"User">
+    preferredPolitics?: StringNullableListFilter<"User">
+    preferredTech?: StringNullableListFilter<"User">
+    preferredBusiness?: StringNullableListFilter<"User">
+    preferredEntertainment?: StringNullableListFilter<"User">
+    preferredScience?: StringNullableListFilter<"User">
+    preferredLifestyle?: StringNullableListFilter<"User">
+    emailNotifications?: BoolFilter<"User"> | boolean
+    dailyDigest?: BoolFilter<"User"> | boolean
+    breakingNewsAlerts?: BoolFilter<"User"> | boolean
+    preferredReadingTime?: IntFilter<"User"> | number
+    preferredArticleLength?: StringFilter<"User"> | string
     userPreferences?: UserPreferenceListRelationFilter
+    userKeywords?: UserKeywordListRelationFilter
     savedArticles?: SavedArticleListRelationFilter
   }, "id" | "clerkId" | "email">
 
@@ -8932,9 +10454,23 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    preferredSports?: SortOrder
+    preferredPolitics?: SortOrder
+    preferredTech?: SortOrder
+    preferredBusiness?: SortOrder
+    preferredEntertainment?: SortOrder
+    preferredScience?: SortOrder
+    preferredLifestyle?: SortOrder
+    emailNotifications?: SortOrder
+    dailyDigest?: SortOrder
+    breakingNewsAlerts?: SortOrder
+    preferredReadingTime?: SortOrder
+    preferredArticleLength?: SortOrder
     _count?: UserCountOrderByAggregateInput
+    _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
+    _sum?: UserSumOrderByAggregateInput
   }
 
   export type UserScalarWhereWithAggregatesInput = {
@@ -8948,6 +10484,18 @@ export namespace Prisma {
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    preferredSports?: StringNullableListFilter<"User">
+    preferredPolitics?: StringNullableListFilter<"User">
+    preferredTech?: StringNullableListFilter<"User">
+    preferredBusiness?: StringNullableListFilter<"User">
+    preferredEntertainment?: StringNullableListFilter<"User">
+    preferredScience?: StringNullableListFilter<"User">
+    preferredLifestyle?: StringNullableListFilter<"User">
+    emailNotifications?: BoolWithAggregatesFilter<"User"> | boolean
+    dailyDigest?: BoolWithAggregatesFilter<"User"> | boolean
+    breakingNewsAlerts?: BoolWithAggregatesFilter<"User"> | boolean
+    preferredReadingTime?: IntWithAggregatesFilter<"User"> | number
+    preferredArticleLength?: StringWithAggregatesFilter<"User"> | string
   }
 
   export type ArticleWhereInput = {
@@ -8966,6 +10514,9 @@ export namespace Prisma {
     summary?: StringNullableFilter<"Article"> | string | null
     createdAt?: DateTimeFilter<"Article"> | Date | string
     updatedAt?: DateTimeFilter<"Article"> | Date | string
+    readingTime?: IntNullableFilter<"Article"> | number | null
+    complexity?: StringNullableFilter<"Article"> | string | null
+    tags?: StringNullableListFilter<"Article">
     source?: XOR<SourceNullableScalarRelationFilter, SourceWhereInput> | null
     articleCategories?: ArticleCategoryListRelationFilter
     savedBy?: SavedArticleListRelationFilter
@@ -8984,6 +10535,9 @@ export namespace Prisma {
     summary?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    readingTime?: SortOrder
+    complexity?: SortOrder
+    tags?: SortOrder
     source?: SourceOrderByWithRelationInput
     articleCategories?: ArticleCategoryOrderByRelationAggregateInput
     savedBy?: SavedArticleOrderByRelationAggregateInput
@@ -9005,6 +10559,9 @@ export namespace Prisma {
     summary?: StringNullableFilter<"Article"> | string | null
     createdAt?: DateTimeFilter<"Article"> | Date | string
     updatedAt?: DateTimeFilter<"Article"> | Date | string
+    readingTime?: IntNullableFilter<"Article"> | number | null
+    complexity?: StringNullableFilter<"Article"> | string | null
+    tags?: StringNullableListFilter<"Article">
     source?: XOR<SourceNullableScalarRelationFilter, SourceWhereInput> | null
     articleCategories?: ArticleCategoryListRelationFilter
     savedBy?: SavedArticleListRelationFilter
@@ -9023,9 +10580,14 @@ export namespace Prisma {
     summary?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    readingTime?: SortOrder
+    complexity?: SortOrder
+    tags?: SortOrder
     _count?: ArticleCountOrderByAggregateInput
+    _avg?: ArticleAvgOrderByAggregateInput
     _max?: ArticleMaxOrderByAggregateInput
     _min?: ArticleMinOrderByAggregateInput
+    _sum?: ArticleSumOrderByAggregateInput
   }
 
   export type ArticleScalarWhereWithAggregatesInput = {
@@ -9044,6 +10606,9 @@ export namespace Prisma {
     summary?: StringNullableWithAggregatesFilter<"Article"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Article"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Article"> | Date | string
+    readingTime?: IntNullableWithAggregatesFilter<"Article"> | number | null
+    complexity?: StringNullableWithAggregatesFilter<"Article"> | string | null
+    tags?: StringNullableListFilter<"Article">
   }
 
   export type SourceWhereInput = {
@@ -9127,6 +10692,9 @@ export namespace Prisma {
     NOT?: CategoryWhereInput | CategoryWhereInput[]
     id?: StringFilter<"Category"> | string
     name?: StringFilter<"Category"> | string
+    description?: StringNullableFilter<"Category"> | string | null
+    icon?: StringNullableFilter<"Category"> | string | null
+    color?: StringNullableFilter<"Category"> | string | null
     createdAt?: DateTimeFilter<"Category"> | Date | string
     updatedAt?: DateTimeFilter<"Category"> | Date | string
     articleCategories?: ArticleCategoryListRelationFilter
@@ -9136,6 +10704,9 @@ export namespace Prisma {
   export type CategoryOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     articleCategories?: ArticleCategoryOrderByRelationAggregateInput
@@ -9148,6 +10719,9 @@ export namespace Prisma {
     AND?: CategoryWhereInput | CategoryWhereInput[]
     OR?: CategoryWhereInput[]
     NOT?: CategoryWhereInput | CategoryWhereInput[]
+    description?: StringNullableFilter<"Category"> | string | null
+    icon?: StringNullableFilter<"Category"> | string | null
+    color?: StringNullableFilter<"Category"> | string | null
     createdAt?: DateTimeFilter<"Category"> | Date | string
     updatedAt?: DateTimeFilter<"Category"> | Date | string
     articleCategories?: ArticleCategoryListRelationFilter
@@ -9157,6 +10731,9 @@ export namespace Prisma {
   export type CategoryOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CategoryCountOrderByAggregateInput
@@ -9170,6 +10747,9 @@ export namespace Prisma {
     NOT?: CategoryScalarWhereWithAggregatesInput | CategoryScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Category"> | string
     name?: StringWithAggregatesFilter<"Category"> | string
+    description?: StringNullableWithAggregatesFilter<"Category"> | string | null
+    icon?: StringNullableWithAggregatesFilter<"Category"> | string | null
+    color?: StringNullableWithAggregatesFilter<"Category"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Category"> | Date | string
   }
@@ -9235,6 +10815,7 @@ export namespace Prisma {
     id?: StringFilter<"UserPreference"> | string
     userId?: StringFilter<"UserPreference"> | string
     categoryId?: StringFilter<"UserPreference"> | string
+    weight?: FloatFilter<"UserPreference"> | number
     createdAt?: DateTimeFilter<"UserPreference"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -9244,6 +10825,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     categoryId?: SortOrder
+    weight?: SortOrder
     createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     category?: CategoryOrderByWithRelationInput
@@ -9257,6 +10839,7 @@ export namespace Prisma {
     NOT?: UserPreferenceWhereInput | UserPreferenceWhereInput[]
     userId?: StringFilter<"UserPreference"> | string
     categoryId?: StringFilter<"UserPreference"> | string
+    weight?: FloatFilter<"UserPreference"> | number
     createdAt?: DateTimeFilter<"UserPreference"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
@@ -9266,10 +10849,13 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     categoryId?: SortOrder
+    weight?: SortOrder
     createdAt?: SortOrder
     _count?: UserPreferenceCountOrderByAggregateInput
+    _avg?: UserPreferenceAvgOrderByAggregateInput
     _max?: UserPreferenceMaxOrderByAggregateInput
     _min?: UserPreferenceMinOrderByAggregateInput
+    _sum?: UserPreferenceSumOrderByAggregateInput
   }
 
   export type UserPreferenceScalarWhereWithAggregatesInput = {
@@ -9279,7 +10865,71 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"UserPreference"> | string
     userId?: StringWithAggregatesFilter<"UserPreference"> | string
     categoryId?: StringWithAggregatesFilter<"UserPreference"> | string
+    weight?: FloatWithAggregatesFilter<"UserPreference"> | number
     createdAt?: DateTimeWithAggregatesFilter<"UserPreference"> | Date | string
+  }
+
+  export type UserKeywordWhereInput = {
+    AND?: UserKeywordWhereInput | UserKeywordWhereInput[]
+    OR?: UserKeywordWhereInput[]
+    NOT?: UserKeywordWhereInput | UserKeywordWhereInput[]
+    id?: StringFilter<"UserKeyword"> | string
+    userId?: StringFilter<"UserKeyword"> | string
+    keyword?: StringFilter<"UserKeyword"> | string
+    category?: StringNullableFilter<"UserKeyword"> | string | null
+    weight?: FloatFilter<"UserKeyword"> | number
+    createdAt?: DateTimeFilter<"UserKeyword"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserKeywordOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    keyword?: SortOrder
+    category?: SortOrder
+    weight?: SortOrder
+    createdAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserKeywordWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_keyword?: UserKeywordUserIdKeywordCompoundUniqueInput
+    AND?: UserKeywordWhereInput | UserKeywordWhereInput[]
+    OR?: UserKeywordWhereInput[]
+    NOT?: UserKeywordWhereInput | UserKeywordWhereInput[]
+    userId?: StringFilter<"UserKeyword"> | string
+    keyword?: StringFilter<"UserKeyword"> | string
+    category?: StringNullableFilter<"UserKeyword"> | string | null
+    weight?: FloatFilter<"UserKeyword"> | number
+    createdAt?: DateTimeFilter<"UserKeyword"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_keyword">
+
+  export type UserKeywordOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    keyword?: SortOrder
+    category?: SortOrder
+    weight?: SortOrder
+    createdAt?: SortOrder
+    _count?: UserKeywordCountOrderByAggregateInput
+    _avg?: UserKeywordAvgOrderByAggregateInput
+    _max?: UserKeywordMaxOrderByAggregateInput
+    _min?: UserKeywordMinOrderByAggregateInput
+    _sum?: UserKeywordSumOrderByAggregateInput
+  }
+
+  export type UserKeywordScalarWhereWithAggregatesInput = {
+    AND?: UserKeywordScalarWhereWithAggregatesInput | UserKeywordScalarWhereWithAggregatesInput[]
+    OR?: UserKeywordScalarWhereWithAggregatesInput[]
+    NOT?: UserKeywordScalarWhereWithAggregatesInput | UserKeywordScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserKeyword"> | string
+    userId?: StringWithAggregatesFilter<"UserKeyword"> | string
+    keyword?: StringWithAggregatesFilter<"UserKeyword"> | string
+    category?: StringNullableWithAggregatesFilter<"UserKeyword"> | string | null
+    weight?: FloatWithAggregatesFilter<"UserKeyword"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"UserKeyword"> | Date | string
   }
 
   export type SavedArticleWhereInput = {
@@ -9344,7 +10994,20 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredSports?: UserCreatepreferredSportsInput | string[]
+    preferredPolitics?: UserCreatepreferredPoliticsInput | string[]
+    preferredTech?: UserCreatepreferredTechInput | string[]
+    preferredBusiness?: UserCreatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserCreatepreferredEntertainmentInput | string[]
+    preferredScience?: UserCreatepreferredScienceInput | string[]
+    preferredLifestyle?: UserCreatepreferredLifestyleInput | string[]
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: number
+    preferredArticleLength?: string
     userPreferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    userKeywords?: UserKeywordCreateNestedManyWithoutUserInput
     savedArticles?: SavedArticleCreateNestedManyWithoutUserInput
   }
 
@@ -9356,7 +11019,20 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredSports?: UserCreatepreferredSportsInput | string[]
+    preferredPolitics?: UserCreatepreferredPoliticsInput | string[]
+    preferredTech?: UserCreatepreferredTechInput | string[]
+    preferredBusiness?: UserCreatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserCreatepreferredEntertainmentInput | string[]
+    preferredScience?: UserCreatepreferredScienceInput | string[]
+    preferredLifestyle?: UserCreatepreferredLifestyleInput | string[]
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: number
+    preferredArticleLength?: string
     userPreferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    userKeywords?: UserKeywordUncheckedCreateNestedManyWithoutUserInput
     savedArticles?: SavedArticleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -9367,7 +11043,20 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
     userPreferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    userKeywords?: UserKeywordUpdateManyWithoutUserNestedInput
     savedArticles?: SavedArticleUpdateManyWithoutUserNestedInput
   }
 
@@ -9378,7 +11067,20 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
     userPreferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    userKeywords?: UserKeywordUncheckedUpdateManyWithoutUserNestedInput
     savedArticles?: SavedArticleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -9390,6 +11092,18 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredSports?: UserCreatepreferredSportsInput | string[]
+    preferredPolitics?: UserCreatepreferredPoliticsInput | string[]
+    preferredTech?: UserCreatepreferredTechInput | string[]
+    preferredBusiness?: UserCreatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserCreatepreferredEntertainmentInput | string[]
+    preferredScience?: UserCreatepreferredScienceInput | string[]
+    preferredLifestyle?: UserCreatepreferredLifestyleInput | string[]
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: number
+    preferredArticleLength?: string
   }
 
   export type UserUpdateManyMutationInput = {
@@ -9399,6 +11113,18 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -9408,6 +11134,18 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
   }
 
   export type ArticleCreateInput = {
@@ -9422,6 +11160,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
     source?: SourceCreateNestedOneWithoutArticlesInput
     articleCategories?: ArticleCategoryCreateNestedManyWithoutArticleInput
     savedBy?: SavedArticleCreateNestedManyWithoutArticleInput
@@ -9440,6 +11181,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
     articleCategories?: ArticleCategoryUncheckedCreateNestedManyWithoutArticleInput
     savedBy?: SavedArticleUncheckedCreateNestedManyWithoutArticleInput
   }
@@ -9455,6 +11199,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
     source?: SourceUpdateOneWithoutArticlesNestedInput
     articleCategories?: ArticleCategoryUpdateManyWithoutArticleNestedInput
     savedBy?: SavedArticleUpdateManyWithoutArticleNestedInput
@@ -9472,6 +11219,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
     articleCategories?: ArticleCategoryUncheckedUpdateManyWithoutArticleNestedInput
     savedBy?: SavedArticleUncheckedUpdateManyWithoutArticleNestedInput
   }
@@ -9489,6 +11239,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
   }
 
   export type ArticleUpdateManyMutationInput = {
@@ -9502,6 +11255,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
   }
 
   export type ArticleUncheckedUpdateManyInput = {
@@ -9516,6 +11272,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
   }
 
   export type SourceCreateInput = {
@@ -9605,6 +11364,9 @@ export namespace Prisma {
   export type CategoryCreateInput = {
     id?: string
     name: string
+    description?: string | null
+    icon?: string | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     articleCategories?: ArticleCategoryCreateNestedManyWithoutCategoryInput
@@ -9614,6 +11376,9 @@ export namespace Prisma {
   export type CategoryUncheckedCreateInput = {
     id?: string
     name: string
+    description?: string | null
+    icon?: string | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     articleCategories?: ArticleCategoryUncheckedCreateNestedManyWithoutCategoryInput
@@ -9622,6 +11387,9 @@ export namespace Prisma {
 
   export type CategoryUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     articleCategories?: ArticleCategoryUpdateManyWithoutCategoryNestedInput
@@ -9630,6 +11398,9 @@ export namespace Prisma {
 
   export type CategoryUncheckedUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     articleCategories?: ArticleCategoryUncheckedUpdateManyWithoutCategoryNestedInput
@@ -9639,18 +11410,27 @@ export namespace Prisma {
   export type CategoryCreateManyInput = {
     id?: string
     name: string
+    description?: string | null
+    icon?: string | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type CategoryUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CategoryUncheckedUpdateManyInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9700,6 +11480,7 @@ export namespace Prisma {
 
   export type UserPreferenceCreateInput = {
     id?: string
+    weight?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutUserPreferencesInput
     category: CategoryCreateNestedOneWithoutUserPreferencesInput
@@ -9709,10 +11490,12 @@ export namespace Prisma {
     id?: string
     userId: string
     categoryId: string
+    weight?: number
     createdAt?: Date | string
   }
 
   export type UserPreferenceUpdateInput = {
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutUserPreferencesNestedInput
     category?: CategoryUpdateOneRequiredWithoutUserPreferencesNestedInput
@@ -9721,6 +11504,7 @@ export namespace Prisma {
   export type UserPreferenceUncheckedUpdateInput = {
     userId?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9728,16 +11512,77 @@ export namespace Prisma {
     id?: string
     userId: string
     categoryId: string
+    weight?: number
     createdAt?: Date | string
   }
 
   export type UserPreferenceUpdateManyMutationInput = {
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserPreferenceUncheckedUpdateManyInput = {
     userId?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
+    weight?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserKeywordCreateInput = {
+    id?: string
+    keyword: string
+    category?: string | null
+    weight?: number
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutUserKeywordsInput
+  }
+
+  export type UserKeywordUncheckedCreateInput = {
+    id?: string
+    userId: string
+    keyword: string
+    category?: string | null
+    weight?: number
+    createdAt?: Date | string
+  }
+
+  export type UserKeywordUpdateInput = {
+    keyword?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutUserKeywordsNestedInput
+  }
+
+  export type UserKeywordUncheckedUpdateInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    keyword?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserKeywordCreateManyInput = {
+    id?: string
+    userId: string
+    keyword: string
+    category?: string | null
+    weight?: number
+    createdAt?: Date | string
+  }
+
+  export type UserKeywordUpdateManyMutationInput = {
+    keyword?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserKeywordUncheckedUpdateManyInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    keyword?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -9826,10 +11671,40 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type UserPreferenceListRelationFilter = {
     every?: UserPreferenceWhereInput
     some?: UserPreferenceWhereInput
     none?: UserPreferenceWhereInput
+  }
+
+  export type UserKeywordListRelationFilter = {
+    every?: UserKeywordWhereInput
+    some?: UserKeywordWhereInput
+    none?: UserKeywordWhereInput
   }
 
   export type SavedArticleListRelationFilter = {
@@ -9839,6 +11714,10 @@ export namespace Prisma {
   }
 
   export type UserPreferenceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserKeywordOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -9854,6 +11733,22 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    preferredSports?: SortOrder
+    preferredPolitics?: SortOrder
+    preferredTech?: SortOrder
+    preferredBusiness?: SortOrder
+    preferredEntertainment?: SortOrder
+    preferredScience?: SortOrder
+    preferredLifestyle?: SortOrder
+    emailNotifications?: SortOrder
+    dailyDigest?: SortOrder
+    breakingNewsAlerts?: SortOrder
+    preferredReadingTime?: SortOrder
+    preferredArticleLength?: SortOrder
+  }
+
+  export type UserAvgOrderByAggregateInput = {
+    preferredReadingTime?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -9864,6 +11759,11 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    emailNotifications?: SortOrder
+    dailyDigest?: SortOrder
+    breakingNewsAlerts?: SortOrder
+    preferredReadingTime?: SortOrder
+    preferredArticleLength?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -9874,6 +11774,15 @@ export namespace Prisma {
     image?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    emailNotifications?: SortOrder
+    dailyDigest?: SortOrder
+    breakingNewsAlerts?: SortOrder
+    preferredReadingTime?: SortOrder
+    preferredArticleLength?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    preferredReadingTime?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -9927,11 +11836,47 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
   export type EnumSentimentNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.Sentiment | EnumSentimentFieldRefInput<$PrismaModel> | null
     in?: $Enums.Sentiment[] | ListEnumSentimentFieldRefInput<$PrismaModel> | null
     notIn?: $Enums.Sentiment[] | ListEnumSentimentFieldRefInput<$PrismaModel> | null
     not?: NestedEnumSentimentNullableFilter<$PrismaModel> | $Enums.Sentiment | null
+    isSet?: boolean
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
     isSet?: boolean
   }
 
@@ -9963,6 +11908,13 @@ export namespace Prisma {
     summary?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    readingTime?: SortOrder
+    complexity?: SortOrder
+    tags?: SortOrder
+  }
+
+  export type ArticleAvgOrderByAggregateInput = {
+    readingTime?: SortOrder
   }
 
   export type ArticleMaxOrderByAggregateInput = {
@@ -9978,6 +11930,8 @@ export namespace Prisma {
     summary?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    readingTime?: SortOrder
+    complexity?: SortOrder
   }
 
   export type ArticleMinOrderByAggregateInput = {
@@ -9993,6 +11947,12 @@ export namespace Prisma {
     summary?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    readingTime?: SortOrder
+    complexity?: SortOrder
+  }
+
+  export type ArticleSumOrderByAggregateInput = {
+    readingTime?: SortOrder
   }
 
   export type EnumSentimentNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -10003,6 +11963,23 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumSentimentNullableFilter<$PrismaModel>
     _max?: NestedEnumSentimentNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
     isSet?: boolean
   }
 
@@ -10055,6 +12032,9 @@ export namespace Prisma {
   export type CategoryCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10062,6 +12042,9 @@ export namespace Prisma {
   export type CategoryMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10069,6 +12052,9 @@ export namespace Prisma {
   export type CategoryMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    description?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10109,6 +12095,17 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -10123,13 +12120,19 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     categoryId?: SortOrder
+    weight?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type UserPreferenceAvgOrderByAggregateInput = {
+    weight?: SortOrder
   }
 
   export type UserPreferenceMaxOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     categoryId?: SortOrder
+    weight?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -10137,7 +12140,68 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     categoryId?: SortOrder
+    weight?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type UserPreferenceSumOrderByAggregateInput = {
+    weight?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type UserKeywordUserIdKeywordCompoundUniqueInput = {
+    userId: string
+    keyword: string
+  }
+
+  export type UserKeywordCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    keyword?: SortOrder
+    category?: SortOrder
+    weight?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserKeywordAvgOrderByAggregateInput = {
+    weight?: SortOrder
+  }
+
+  export type UserKeywordMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    keyword?: SortOrder
+    category?: SortOrder
+    weight?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserKeywordMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    keyword?: SortOrder
+    category?: SortOrder
+    weight?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type UserKeywordSumOrderByAggregateInput = {
+    weight?: SortOrder
   }
 
   export type SavedArticleUserIdArticleIdCompoundUniqueInput = {
@@ -10166,11 +12230,46 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type UserCreatepreferredSportsInput = {
+    set: string[]
+  }
+
+  export type UserCreatepreferredPoliticsInput = {
+    set: string[]
+  }
+
+  export type UserCreatepreferredTechInput = {
+    set: string[]
+  }
+
+  export type UserCreatepreferredBusinessInput = {
+    set: string[]
+  }
+
+  export type UserCreatepreferredEntertainmentInput = {
+    set: string[]
+  }
+
+  export type UserCreatepreferredScienceInput = {
+    set: string[]
+  }
+
+  export type UserCreatepreferredLifestyleInput = {
+    set: string[]
+  }
+
   export type UserPreferenceCreateNestedManyWithoutUserInput = {
     create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput> | UserPreferenceCreateWithoutUserInput[] | UserPreferenceUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput | UserPreferenceCreateOrConnectWithoutUserInput[]
     createMany?: UserPreferenceCreateManyUserInputEnvelope
     connect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+  }
+
+  export type UserKeywordCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserKeywordCreateWithoutUserInput, UserKeywordUncheckedCreateWithoutUserInput> | UserKeywordCreateWithoutUserInput[] | UserKeywordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserKeywordCreateOrConnectWithoutUserInput | UserKeywordCreateOrConnectWithoutUserInput[]
+    createMany?: UserKeywordCreateManyUserInputEnvelope
+    connect?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
   }
 
   export type SavedArticleCreateNestedManyWithoutUserInput = {
@@ -10185,6 +12284,13 @@ export namespace Prisma {
     connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput | UserPreferenceCreateOrConnectWithoutUserInput[]
     createMany?: UserPreferenceCreateManyUserInputEnvelope
     connect?: UserPreferenceWhereUniqueInput | UserPreferenceWhereUniqueInput[]
+  }
+
+  export type UserKeywordUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserKeywordCreateWithoutUserInput, UserKeywordUncheckedCreateWithoutUserInput> | UserKeywordCreateWithoutUserInput[] | UserKeywordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserKeywordCreateOrConnectWithoutUserInput | UserKeywordCreateOrConnectWithoutUserInput[]
+    createMany?: UserKeywordCreateManyUserInputEnvelope
+    connect?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
   }
 
   export type SavedArticleUncheckedCreateNestedManyWithoutUserInput = {
@@ -10207,6 +12313,53 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type UserUpdatepreferredSportsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdatepreferredPoliticsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdatepreferredTechInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdatepreferredBusinessInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdatepreferredEntertainmentInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdatepreferredScienceInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdatepreferredLifestyleInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type UserPreferenceUpdateManyWithoutUserNestedInput = {
     create?: XOR<UserPreferenceCreateWithoutUserInput, UserPreferenceUncheckedCreateWithoutUserInput> | UserPreferenceCreateWithoutUserInput[] | UserPreferenceUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserPreferenceCreateOrConnectWithoutUserInput | UserPreferenceCreateOrConnectWithoutUserInput[]
@@ -10219,6 +12372,20 @@ export namespace Prisma {
     update?: UserPreferenceUpdateWithWhereUniqueWithoutUserInput | UserPreferenceUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserPreferenceUpdateManyWithWhereWithoutUserInput | UserPreferenceUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserPreferenceScalarWhereInput | UserPreferenceScalarWhereInput[]
+  }
+
+  export type UserKeywordUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserKeywordCreateWithoutUserInput, UserKeywordUncheckedCreateWithoutUserInput> | UserKeywordCreateWithoutUserInput[] | UserKeywordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserKeywordCreateOrConnectWithoutUserInput | UserKeywordCreateOrConnectWithoutUserInput[]
+    upsert?: UserKeywordUpsertWithWhereUniqueWithoutUserInput | UserKeywordUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserKeywordCreateManyUserInputEnvelope
+    set?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
+    disconnect?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
+    delete?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
+    connect?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
+    update?: UserKeywordUpdateWithWhereUniqueWithoutUserInput | UserKeywordUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserKeywordUpdateManyWithWhereWithoutUserInput | UserKeywordUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserKeywordScalarWhereInput | UserKeywordScalarWhereInput[]
   }
 
   export type SavedArticleUpdateManyWithoutUserNestedInput = {
@@ -10249,6 +12416,20 @@ export namespace Prisma {
     deleteMany?: UserPreferenceScalarWhereInput | UserPreferenceScalarWhereInput[]
   }
 
+  export type UserKeywordUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserKeywordCreateWithoutUserInput, UserKeywordUncheckedCreateWithoutUserInput> | UserKeywordCreateWithoutUserInput[] | UserKeywordUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserKeywordCreateOrConnectWithoutUserInput | UserKeywordCreateOrConnectWithoutUserInput[]
+    upsert?: UserKeywordUpsertWithWhereUniqueWithoutUserInput | UserKeywordUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserKeywordCreateManyUserInputEnvelope
+    set?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
+    disconnect?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
+    delete?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
+    connect?: UserKeywordWhereUniqueInput | UserKeywordWhereUniqueInput[]
+    update?: UserKeywordUpdateWithWhereUniqueWithoutUserInput | UserKeywordUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserKeywordUpdateManyWithWhereWithoutUserInput | UserKeywordUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserKeywordScalarWhereInput | UserKeywordScalarWhereInput[]
+  }
+
   export type SavedArticleUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<SavedArticleCreateWithoutUserInput, SavedArticleUncheckedCreateWithoutUserInput> | SavedArticleCreateWithoutUserInput[] | SavedArticleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: SavedArticleCreateOrConnectWithoutUserInput | SavedArticleCreateOrConnectWithoutUserInput[]
@@ -10261,6 +12442,10 @@ export namespace Prisma {
     update?: SavedArticleUpdateWithWhereUniqueWithoutUserInput | SavedArticleUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: SavedArticleUpdateManyWithWhereWithoutUserInput | SavedArticleUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: SavedArticleScalarWhereInput | SavedArticleScalarWhereInput[]
+  }
+
+  export type ArticleCreatetagsInput = {
+    set: string[]
   }
 
   export type SourceCreateNestedOneWithoutArticlesInput = {
@@ -10300,6 +12485,20 @@ export namespace Prisma {
   export type NullableEnumSentimentFieldUpdateOperationsInput = {
     set?: $Enums.Sentiment | null
     unset?: boolean
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+    unset?: boolean
+  }
+
+  export type ArticleUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type SourceUpdateOneWithoutArticlesNestedInput = {
@@ -10534,6 +12733,14 @@ export namespace Prisma {
     connect?: CategoryWhereUniqueInput
   }
 
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type UserUpdateOneRequiredWithoutUserPreferencesNestedInput = {
     create?: XOR<UserCreateWithoutUserPreferencesInput, UserUncheckedCreateWithoutUserPreferencesInput>
     connectOrCreate?: UserCreateOrConnectWithoutUserPreferencesInput
@@ -10548,6 +12755,20 @@ export namespace Prisma {
     upsert?: CategoryUpsertWithoutUserPreferencesInput
     connect?: CategoryWhereUniqueInput
     update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutUserPreferencesInput, CategoryUpdateWithoutUserPreferencesInput>, CategoryUncheckedUpdateWithoutUserPreferencesInput>
+  }
+
+  export type UserCreateNestedOneWithoutUserKeywordsInput = {
+    create?: XOR<UserCreateWithoutUserKeywordsInput, UserUncheckedCreateWithoutUserKeywordsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserKeywordsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutUserKeywordsNestedInput = {
+    create?: XOR<UserCreateWithoutUserKeywordsInput, UserUncheckedCreateWithoutUserKeywordsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutUserKeywordsInput
+    upsert?: UserUpsertWithoutUserKeywordsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutUserKeywordsInput, UserUpdateWithoutUserKeywordsInput>, UserUncheckedUpdateWithoutUserKeywordsInput>
   }
 
   export type UserCreateNestedOneWithoutSavedArticlesInput = {
@@ -10618,6 +12839,22 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -10633,17 +12870,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -10690,6 +12916,41 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type NestedEnumSentimentNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.Sentiment | EnumSentimentFieldRefInput<$PrismaModel> | null
     in?: $Enums.Sentiment[] | ListEnumSentimentFieldRefInput<$PrismaModel> | null
@@ -10709,8 +12970,54 @@ export namespace Prisma {
     isSet?: boolean
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+    isSet?: boolean
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    isSet?: boolean
+  }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
   export type UserPreferenceCreateWithoutUserInput = {
     id?: string
+    weight?: number
     createdAt?: Date | string
     category: CategoryCreateNestedOneWithoutUserPreferencesInput
   }
@@ -10718,6 +13025,7 @@ export namespace Prisma {
   export type UserPreferenceUncheckedCreateWithoutUserInput = {
     id?: string
     categoryId: string
+    weight?: number
     createdAt?: Date | string
   }
 
@@ -10728,6 +13036,31 @@ export namespace Prisma {
 
   export type UserPreferenceCreateManyUserInputEnvelope = {
     data: UserPreferenceCreateManyUserInput | UserPreferenceCreateManyUserInput[]
+  }
+
+  export type UserKeywordCreateWithoutUserInput = {
+    id?: string
+    keyword: string
+    category?: string | null
+    weight?: number
+    createdAt?: Date | string
+  }
+
+  export type UserKeywordUncheckedCreateWithoutUserInput = {
+    id?: string
+    keyword: string
+    category?: string | null
+    weight?: number
+    createdAt?: Date | string
+  }
+
+  export type UserKeywordCreateOrConnectWithoutUserInput = {
+    where: UserKeywordWhereUniqueInput
+    create: XOR<UserKeywordCreateWithoutUserInput, UserKeywordUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserKeywordCreateManyUserInputEnvelope = {
+    data: UserKeywordCreateManyUserInput | UserKeywordCreateManyUserInput[]
   }
 
   export type SavedArticleCreateWithoutUserInput = {
@@ -10774,7 +13107,36 @@ export namespace Prisma {
     id?: StringFilter<"UserPreference"> | string
     userId?: StringFilter<"UserPreference"> | string
     categoryId?: StringFilter<"UserPreference"> | string
+    weight?: FloatFilter<"UserPreference"> | number
     createdAt?: DateTimeFilter<"UserPreference"> | Date | string
+  }
+
+  export type UserKeywordUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserKeywordWhereUniqueInput
+    update: XOR<UserKeywordUpdateWithoutUserInput, UserKeywordUncheckedUpdateWithoutUserInput>
+    create: XOR<UserKeywordCreateWithoutUserInput, UserKeywordUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserKeywordUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserKeywordWhereUniqueInput
+    data: XOR<UserKeywordUpdateWithoutUserInput, UserKeywordUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserKeywordUpdateManyWithWhereWithoutUserInput = {
+    where: UserKeywordScalarWhereInput
+    data: XOR<UserKeywordUpdateManyMutationInput, UserKeywordUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserKeywordScalarWhereInput = {
+    AND?: UserKeywordScalarWhereInput | UserKeywordScalarWhereInput[]
+    OR?: UserKeywordScalarWhereInput[]
+    NOT?: UserKeywordScalarWhereInput | UserKeywordScalarWhereInput[]
+    id?: StringFilter<"UserKeyword"> | string
+    userId?: StringFilter<"UserKeyword"> | string
+    keyword?: StringFilter<"UserKeyword"> | string
+    category?: StringNullableFilter<"UserKeyword"> | string | null
+    weight?: FloatFilter<"UserKeyword"> | number
+    createdAt?: DateTimeFilter<"UserKeyword"> | Date | string
   }
 
   export type SavedArticleUpsertWithWhereUniqueWithoutUserInput = {
@@ -10961,6 +13323,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
     articleCategories?: ArticleCategoryCreateNestedManyWithoutArticleInput
     savedBy?: SavedArticleCreateNestedManyWithoutArticleInput
   }
@@ -10977,6 +13342,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
     articleCategories?: ArticleCategoryUncheckedCreateNestedManyWithoutArticleInput
     savedBy?: SavedArticleUncheckedCreateNestedManyWithoutArticleInput
   }
@@ -11022,6 +13390,9 @@ export namespace Prisma {
     summary?: StringNullableFilter<"Article"> | string | null
     createdAt?: DateTimeFilter<"Article"> | Date | string
     updatedAt?: DateTimeFilter<"Article"> | Date | string
+    readingTime?: IntNullableFilter<"Article"> | number | null
+    complexity?: StringNullableFilter<"Article"> | string | null
+    tags?: StringNullableListFilter<"Article">
   }
 
   export type ArticleCategoryCreateWithoutCategoryInput = {
@@ -11047,6 +13418,7 @@ export namespace Prisma {
 
   export type UserPreferenceCreateWithoutCategoryInput = {
     id?: string
+    weight?: number
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutUserPreferencesInput
   }
@@ -11054,6 +13426,7 @@ export namespace Prisma {
   export type UserPreferenceUncheckedCreateWithoutCategoryInput = {
     id?: string
     userId: string
+    weight?: number
     createdAt?: Date | string
   }
 
@@ -11110,6 +13483,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
     source?: SourceCreateNestedOneWithoutArticlesInput
     savedBy?: SavedArticleCreateNestedManyWithoutArticleInput
   }
@@ -11127,6 +13503,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
     savedBy?: SavedArticleUncheckedCreateNestedManyWithoutArticleInput
   }
 
@@ -11138,6 +13517,9 @@ export namespace Prisma {
   export type CategoryCreateWithoutArticleCategoriesInput = {
     id?: string
     name: string
+    description?: string | null
+    icon?: string | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     userPreferences?: UserPreferenceCreateNestedManyWithoutCategoryInput
@@ -11146,6 +13528,9 @@ export namespace Prisma {
   export type CategoryUncheckedCreateWithoutArticleCategoriesInput = {
     id?: string
     name: string
+    description?: string | null
+    icon?: string | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     userPreferences?: UserPreferenceUncheckedCreateNestedManyWithoutCategoryInput
@@ -11178,6 +13563,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
     source?: SourceUpdateOneWithoutArticlesNestedInput
     savedBy?: SavedArticleUpdateManyWithoutArticleNestedInput
   }
@@ -11194,6 +13582,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
     savedBy?: SavedArticleUncheckedUpdateManyWithoutArticleNestedInput
   }
 
@@ -11210,6 +13601,9 @@ export namespace Prisma {
 
   export type CategoryUpdateWithoutArticleCategoriesInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userPreferences?: UserPreferenceUpdateManyWithoutCategoryNestedInput
@@ -11217,6 +13611,9 @@ export namespace Prisma {
 
   export type CategoryUncheckedUpdateWithoutArticleCategoriesInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userPreferences?: UserPreferenceUncheckedUpdateManyWithoutCategoryNestedInput
@@ -11230,6 +13627,19 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredSports?: UserCreatepreferredSportsInput | string[]
+    preferredPolitics?: UserCreatepreferredPoliticsInput | string[]
+    preferredTech?: UserCreatepreferredTechInput | string[]
+    preferredBusiness?: UserCreatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserCreatepreferredEntertainmentInput | string[]
+    preferredScience?: UserCreatepreferredScienceInput | string[]
+    preferredLifestyle?: UserCreatepreferredLifestyleInput | string[]
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: number
+    preferredArticleLength?: string
+    userKeywords?: UserKeywordCreateNestedManyWithoutUserInput
     savedArticles?: SavedArticleCreateNestedManyWithoutUserInput
   }
 
@@ -11241,6 +13651,19 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredSports?: UserCreatepreferredSportsInput | string[]
+    preferredPolitics?: UserCreatepreferredPoliticsInput | string[]
+    preferredTech?: UserCreatepreferredTechInput | string[]
+    preferredBusiness?: UserCreatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserCreatepreferredEntertainmentInput | string[]
+    preferredScience?: UserCreatepreferredScienceInput | string[]
+    preferredLifestyle?: UserCreatepreferredLifestyleInput | string[]
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: number
+    preferredArticleLength?: string
+    userKeywords?: UserKeywordUncheckedCreateNestedManyWithoutUserInput
     savedArticles?: SavedArticleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -11252,6 +13675,9 @@ export namespace Prisma {
   export type CategoryCreateWithoutUserPreferencesInput = {
     id?: string
     name: string
+    description?: string | null
+    icon?: string | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     articleCategories?: ArticleCategoryCreateNestedManyWithoutCategoryInput
@@ -11260,6 +13686,9 @@ export namespace Prisma {
   export type CategoryUncheckedCreateWithoutUserPreferencesInput = {
     id?: string
     name: string
+    description?: string | null
+    icon?: string | null
+    color?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     articleCategories?: ArticleCategoryUncheckedCreateNestedManyWithoutCategoryInput
@@ -11288,6 +13717,19 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
+    userKeywords?: UserKeywordUpdateManyWithoutUserNestedInput
     savedArticles?: SavedArticleUpdateManyWithoutUserNestedInput
   }
 
@@ -11298,6 +13740,19 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
+    userKeywords?: UserKeywordUncheckedUpdateManyWithoutUserNestedInput
     savedArticles?: SavedArticleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -11314,6 +13769,9 @@ export namespace Prisma {
 
   export type CategoryUpdateWithoutUserPreferencesInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     articleCategories?: ArticleCategoryUpdateManyWithoutCategoryNestedInput
@@ -11321,9 +13779,122 @@ export namespace Prisma {
 
   export type CategoryUncheckedUpdateWithoutUserPreferencesInput = {
     name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     articleCategories?: ArticleCategoryUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type UserCreateWithoutUserKeywordsInput = {
+    id?: string
+    clerkId: string
+    email: string
+    name?: string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    preferredSports?: UserCreatepreferredSportsInput | string[]
+    preferredPolitics?: UserCreatepreferredPoliticsInput | string[]
+    preferredTech?: UserCreatepreferredTechInput | string[]
+    preferredBusiness?: UserCreatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserCreatepreferredEntertainmentInput | string[]
+    preferredScience?: UserCreatepreferredScienceInput | string[]
+    preferredLifestyle?: UserCreatepreferredLifestyleInput | string[]
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: number
+    preferredArticleLength?: string
+    userPreferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    savedArticles?: SavedArticleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutUserKeywordsInput = {
+    id?: string
+    clerkId: string
+    email: string
+    name?: string | null
+    image?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    preferredSports?: UserCreatepreferredSportsInput | string[]
+    preferredPolitics?: UserCreatepreferredPoliticsInput | string[]
+    preferredTech?: UserCreatepreferredTechInput | string[]
+    preferredBusiness?: UserCreatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserCreatepreferredEntertainmentInput | string[]
+    preferredScience?: UserCreatepreferredScienceInput | string[]
+    preferredLifestyle?: UserCreatepreferredLifestyleInput | string[]
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: number
+    preferredArticleLength?: string
+    userPreferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    savedArticles?: SavedArticleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutUserKeywordsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutUserKeywordsInput, UserUncheckedCreateWithoutUserKeywordsInput>
+  }
+
+  export type UserUpsertWithoutUserKeywordsInput = {
+    update: XOR<UserUpdateWithoutUserKeywordsInput, UserUncheckedUpdateWithoutUserKeywordsInput>
+    create: XOR<UserCreateWithoutUserKeywordsInput, UserUncheckedCreateWithoutUserKeywordsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutUserKeywordsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutUserKeywordsInput, UserUncheckedUpdateWithoutUserKeywordsInput>
+  }
+
+  export type UserUpdateWithoutUserKeywordsInput = {
+    clerkId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
+    userPreferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    savedArticles?: SavedArticleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutUserKeywordsInput = {
+    clerkId?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
+    userPreferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    savedArticles?: SavedArticleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutSavedArticlesInput = {
@@ -11334,7 +13905,20 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredSports?: UserCreatepreferredSportsInput | string[]
+    preferredPolitics?: UserCreatepreferredPoliticsInput | string[]
+    preferredTech?: UserCreatepreferredTechInput | string[]
+    preferredBusiness?: UserCreatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserCreatepreferredEntertainmentInput | string[]
+    preferredScience?: UserCreatepreferredScienceInput | string[]
+    preferredLifestyle?: UserCreatepreferredLifestyleInput | string[]
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: number
+    preferredArticleLength?: string
     userPreferences?: UserPreferenceCreateNestedManyWithoutUserInput
+    userKeywords?: UserKeywordCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSavedArticlesInput = {
@@ -11345,7 +13929,20 @@ export namespace Prisma {
     image?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    preferredSports?: UserCreatepreferredSportsInput | string[]
+    preferredPolitics?: UserCreatepreferredPoliticsInput | string[]
+    preferredTech?: UserCreatepreferredTechInput | string[]
+    preferredBusiness?: UserCreatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserCreatepreferredEntertainmentInput | string[]
+    preferredScience?: UserCreatepreferredScienceInput | string[]
+    preferredLifestyle?: UserCreatepreferredLifestyleInput | string[]
+    emailNotifications?: boolean
+    dailyDigest?: boolean
+    breakingNewsAlerts?: boolean
+    preferredReadingTime?: number
+    preferredArticleLength?: string
     userPreferences?: UserPreferenceUncheckedCreateNestedManyWithoutUserInput
+    userKeywords?: UserKeywordUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSavedArticlesInput = {
@@ -11365,6 +13962,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
     source?: SourceCreateNestedOneWithoutArticlesInput
     articleCategories?: ArticleCategoryCreateNestedManyWithoutArticleInput
   }
@@ -11382,6 +13982,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
     articleCategories?: ArticleCategoryUncheckedCreateNestedManyWithoutArticleInput
   }
 
@@ -11408,7 +14011,20 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
     userPreferences?: UserPreferenceUpdateManyWithoutUserNestedInput
+    userKeywords?: UserKeywordUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSavedArticlesInput = {
@@ -11418,7 +14034,20 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    preferredSports?: UserUpdatepreferredSportsInput | string[]
+    preferredPolitics?: UserUpdatepreferredPoliticsInput | string[]
+    preferredTech?: UserUpdatepreferredTechInput | string[]
+    preferredBusiness?: UserUpdatepreferredBusinessInput | string[]
+    preferredEntertainment?: UserUpdatepreferredEntertainmentInput | string[]
+    preferredScience?: UserUpdatepreferredScienceInput | string[]
+    preferredLifestyle?: UserUpdatepreferredLifestyleInput | string[]
+    emailNotifications?: BoolFieldUpdateOperationsInput | boolean
+    dailyDigest?: BoolFieldUpdateOperationsInput | boolean
+    breakingNewsAlerts?: BoolFieldUpdateOperationsInput | boolean
+    preferredReadingTime?: IntFieldUpdateOperationsInput | number
+    preferredArticleLength?: StringFieldUpdateOperationsInput | string
     userPreferences?: UserPreferenceUncheckedUpdateManyWithoutUserNestedInput
+    userKeywords?: UserKeywordUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ArticleUpsertWithoutSavedByInput = {
@@ -11443,6 +14072,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
     source?: SourceUpdateOneWithoutArticlesNestedInput
     articleCategories?: ArticleCategoryUpdateManyWithoutArticleNestedInput
   }
@@ -11459,12 +14091,24 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
     articleCategories?: ArticleCategoryUncheckedUpdateManyWithoutArticleNestedInput
   }
 
   export type UserPreferenceCreateManyUserInput = {
     id?: string
     categoryId: string
+    weight?: number
+    createdAt?: Date | string
+  }
+
+  export type UserKeywordCreateManyUserInput = {
+    id?: string
+    keyword: string
+    category?: string | null
+    weight?: number
     createdAt?: Date | string
   }
 
@@ -11475,17 +14119,41 @@ export namespace Prisma {
   }
 
   export type UserPreferenceUpdateWithoutUserInput = {
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutUserPreferencesNestedInput
   }
 
   export type UserPreferenceUncheckedUpdateWithoutUserInput = {
     categoryId?: StringFieldUpdateOperationsInput | string
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserPreferenceUncheckedUpdateManyWithoutUserInput = {
     categoryId?: StringFieldUpdateOperationsInput | string
+    weight?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserKeywordUpdateWithoutUserInput = {
+    keyword?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserKeywordUncheckedUpdateWithoutUserInput = {
+    keyword?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserKeywordUncheckedUpdateManyWithoutUserInput = {
+    keyword?: StringFieldUpdateOperationsInput | string
+    category?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -11558,6 +14226,9 @@ export namespace Prisma {
     summary?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    readingTime?: number | null
+    complexity?: string | null
+    tags?: ArticleCreatetagsInput | string[]
   }
 
   export type ArticleUpdateWithoutSourceInput = {
@@ -11571,6 +14242,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
     articleCategories?: ArticleCategoryUpdateManyWithoutArticleNestedInput
     savedBy?: SavedArticleUpdateManyWithoutArticleNestedInput
   }
@@ -11586,6 +14260,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
     articleCategories?: ArticleCategoryUncheckedUpdateManyWithoutArticleNestedInput
     savedBy?: SavedArticleUncheckedUpdateManyWithoutArticleNestedInput
   }
@@ -11601,6 +14278,9 @@ export namespace Prisma {
     summary?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingTime?: NullableIntFieldUpdateOperationsInput | number | null
+    complexity?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: ArticleUpdatetagsInput | string[]
   }
 
   export type ArticleCategoryCreateManyCategoryInput = {
@@ -11612,6 +14292,7 @@ export namespace Prisma {
   export type UserPreferenceCreateManyCategoryInput = {
     id?: string
     userId: string
+    weight?: number
     createdAt?: Date | string
   }
 
@@ -11631,17 +14312,20 @@ export namespace Prisma {
   }
 
   export type UserPreferenceUpdateWithoutCategoryInput = {
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutUserPreferencesNestedInput
   }
 
   export type UserPreferenceUncheckedUpdateWithoutCategoryInput = {
     userId?: StringFieldUpdateOperationsInput | string
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserPreferenceUncheckedUpdateManyWithoutCategoryInput = {
     userId?: StringFieldUpdateOperationsInput | string
+    weight?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

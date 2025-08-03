@@ -25,33 +25,36 @@ interface NewsArticle {
 }
 
 export default function ForYouPage() {
+  const { user } = useUser();
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const { isSignedIn, user } = useUser();
-  
+  const [error, setError] = useState<string | null>(null);
+
   // Helper function to create a consistent hash from URL for unique IDs
   const createArticleId = (url: string, index: number): string => {
     if (!url) return `article-${index}`;
     return btoa(url).replace(/[^a-zA-Z0-9]/g, '').substring(0, 24);
   };
-  
-  // Helper function to remove duplicate articles
+
+  // Helper function to deduplicate articles
   const deduplicateArticles = (newArticles: NewsArticle[], existingArticles: NewsArticle[]): NewsArticle[] => {
-    const existingUrls = new Set(existingArticles.map(article => article.url));
-    return newArticles.filter(article => !existingUrls.has(article.url));
+    const existingUrls = new Set(existingArticles.map(article => article.url.toLowerCase()));
+    return newArticles.filter(article => !existingUrls.has(article.url.toLowerCase()));
   };
   
-  const fetchNews = async (pageNum = 1) => {
+  const fetchPersonalizedNews = async (pageNum = 1) => {
     try {
       setIsLoading(true);
-      // Use technology as a default category for "For You" page
-      const response = await axios.get(`/api/news?category=technology&page=${pageNum}`);
+      setError(null);
+      
+      // Use the personalized news API
+      const response = await axios.get(`/api/news/personalized?page=${pageNum}&limit=10`);
       
       if (response.data && response.data.articles) {
         const newsArticles = response.data.articles.map((article: any, index: number) => ({
-          id: createArticleId(article.url, index),
+          id: article.id || createArticleId(article.url, index),
           title: article.title || "No title available",
           description: article.description || "No description available",
           url: article.url,
@@ -61,9 +64,9 @@ export default function ForYouPage() {
             id: article.source?.id || null,
             name: article.source?.name || "Unknown Source"
           },
-          sentiment: getRandomSentiment(),
-          summary: `This is a summary of the article about ${article.title.split(' ').slice(0, 5).join(' ')}...`,
-          isSaved: false
+          sentiment: article.sentiment || "NEUTRAL",
+          summary: article.summary || `This is a summary of the article about ${article.title.split(' ').slice(0, 5).join(' ')}...`,
+          isSaved: article.isSaved || false
         }));
         
         if (pageNum === 1) {
@@ -73,89 +76,104 @@ export default function ForYouPage() {
           setArticles(prev => [...prev, ...uniqueNewArticles]);
         }
         
-        setHasMore(newsArticles.length > 0);
+        setHasMore(response.data.hasMore || false);
       }
     } catch (error) {
-      console.error("Error fetching news:", error);
+      console.error("Error fetching personalized news:", error);
+      setError("Failed to load personalized news. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
   
-  // Helper function to generate random sentiment for demo purposes
-  const getRandomSentiment = (): "POSITIVE" | "NEUTRAL" | "NEGATIVE" => {
-    const sentiments: ["POSITIVE", "NEUTRAL", "NEGATIVE"] = ["POSITIVE", "NEUTRAL", "NEGATIVE"];
-    return sentiments[Math.floor(Math.random() * sentiments.length)];
-  };
-  
   useEffect(() => {
-    fetchNews();
+    fetchPersonalizedNews();
   }, []);
   
   const handleLoadMore = () => {
     const nextPage = page + 1;
     setPage(nextPage);
-    fetchNews(nextPage);
+    fetchPersonalizedNews(nextPage);
   };
-  
+
   const handleSaveArticle = (articleId: string) => {
-    console.log(`Article ${articleId} saved`);
+    console.log(`Article ${articleId} saved from personalized feed`);
+    // Update the article's saved status in the local state
+    setArticles(prev => 
+      prev.map(article => 
+        article.id === articleId 
+          ? { ...article, isSaved: !article.isSaved }
+          : article
+      )
+    );
   };
-  
+
+  if (error) {
+    return (
+      <div className="space-y-8">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">For You</h1>
+          <p className="text-muted-foreground">
+            Personalized news based on your interests and preferences
+          </p>
+        </div>
+        
+        <div className="flex flex-col items-center justify-center space-y-4 py-12">
+          <p className="text-muted-foreground">{error}</p>
+          <Button onClick={() => fetchPersonalizedNews(1)}>
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">For You</h1>
         <p className="text-muted-foreground">
-          Technology news tailored for you, {user?.firstName || "User"}
+          Personalized news based on your interests and preferences
         </p>
       </div>
       
-      {isLoading && articles.length === 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="overflow-hidden rounded-lg border bg-background">
-              <Skeleton className="h-48 w-full" />
-              <div className="p-6">
-                <Skeleton className="h-6 w-2/3 mb-4" />
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-2/3" />
-              </div>
-            </div>
-          ))}
+      {articles.length === 0 && !isLoading ? (
+        <div className="flex flex-col items-center justify-center space-y-4 py-12">
+          <p className="text-muted-foreground">No personalized articles found.</p>
+          <p className="text-sm text-muted-foreground">
+            Try updating your preferences in Settings to see more relevant articles.
+          </p>
         </div>
       ) : (
-        <>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {articles.map((article) => (
-              <ArticleCard 
-                key={article.id} 
-                article={article} 
-                onSave={handleSaveArticle} 
-              />
-            ))}
-          </div>
+        <div className="grid gap-6">
+          {articles.map((article) => (
+            <ArticleCard
+              key={article.id}
+              article={article}
+              onSave={() => handleSaveArticle(article.id)}
+            />
+          ))}
           
-          {articles.length === 0 && !isLoading && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No articles found.</p>
-              <p className="text-sm mt-2">Try again later or check your internet connection.</p>
+          {isLoading && (
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="space-y-3">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+              ))}
             </div>
           )}
           
-          {hasMore && (
+          {hasMore && !isLoading && (
             <div className="flex justify-center">
-              <Button 
-                variant="outline" 
-                onClick={handleLoadMore}
-                disabled={isLoading}
-              >
-                {isLoading ? "Loading..." : "Load More"}
+              <Button onClick={handleLoadMore} variant="outline">
+                Load More Articles
               </Button>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );

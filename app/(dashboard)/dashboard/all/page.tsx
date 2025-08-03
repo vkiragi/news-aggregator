@@ -31,9 +31,14 @@ export default function AllNewsPage() {
   
   // Helper function to create a consistent hash from URL for unique IDs
   const createArticleId = (url: string, index: number): string => {
-    if (!url) return `article-${index}`;
-    // Use URL as ID, but create a simple hash for consistency
-    return btoa(url).replace(/[^a-zA-Z0-9]/g, '').substring(0, 24);
+    if (!url) return `article-${Date.now()}-${index}`;
+    // Use a combination of timestamp, index, and URL hash for guaranteed uniqueness
+    const timestamp = Date.now();
+    const urlHash = url.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+    return `article-${timestamp}-${index}-${Math.abs(urlHash)}`;
   };
   
   // Helper function to remove duplicate articles
