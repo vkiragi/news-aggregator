@@ -48,9 +48,9 @@ export default async function SavedArticlesPage() {
 
       {savedArticles.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {savedArticles.map((article) => (
+          {savedArticles.map((article: any, index: number) => (
             <ArticleCard 
-              key={article.id} 
+              key={`${article.id}-${index}-${Date.now()}`} 
               article={{
                 id: article.id,
                 title: article.title,

@@ -18,14 +18,13 @@ export function SaveArticleButton({ articleId, isSaved = false }: SaveArticleBut
     try {
       setSaving(true);
       
-      const response = await fetch("/api/articles/save", {
-        method: "POST",
+      const response = await fetch("/api/articles/saved", {
+        method: saved ? "DELETE" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           articleId,
-          action: saved ? "unsave" : "save",
         }),
       });
 

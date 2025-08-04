@@ -13,8 +13,14 @@ export default async function DashboardPage() {
   const sourcesCount = await db.source.count();
   const categoriesCount = await db.category.count();
   
-  // Later we can add user-specific stats like saved articles
-  const savedCount = 0; // This will be implemented with user preferences
+  // Fetch user's saved articles count
+  const savedCount = user ? await db.savedArticle.count({
+    where: {
+      user: {
+        clerkId: user.id
+      }
+    }
+  }) : 0;
 
   const stats = [
     { title: "Total Sources", value: sourcesCount, icon: Newspaper },
